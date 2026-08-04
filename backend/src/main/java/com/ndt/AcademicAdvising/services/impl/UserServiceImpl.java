@@ -6,6 +6,7 @@ package com.ndt.AcademicAdvising.services.impl;
 
 import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
+import com.ndt.AcademicAdvising.dto.RequestUserLoginDTO;
 import com.ndt.AcademicAdvising.dto.RequestUserRegisterDTO;
 import com.ndt.AcademicAdvising.enums.UserRole;
 import com.ndt.AcademicAdvising.pojo.User;
@@ -22,7 +23,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
 /**
  *
@@ -36,8 +36,9 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private Cloudinary cloudinary;
+    
 
-    private BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder(12);
+    private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder(12);
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
