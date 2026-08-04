@@ -5,14 +5,11 @@
 package com.ndt.AcademicAdvising.services;
 
 import com.ndt.AcademicAdvising.dto.RequestUserLoginDTO;
-import com.ndt.AcademicAdvising.dto.RequestUserRegisterDTO;
-import com.ndt.AcademicAdvising.pojo.User;
-import org.springframework.security.core.userdetails.UserDetailsService;
 
 /**
  *
  * @author ngodo
  */
-public interface UserService extends UserDetailsService{
-    void addUser(RequestUserRegisterDTO u);
+public interface AuthService {
+    public Boolean verify(RequestUserLoginDTO user);
 }
