@@ -14,6 +14,7 @@ import org.springframework.data.domain.Page;
 public interface PostService {
     Page<ResponsePostDTO> getListPost();
     ResponsePostDTO addPost(String content);
-    Boolean existPost(int postId);
     void deletePost(int postId);
+    ResponsePostDTO updatePost(int postId, String content);
+    public Page<ResponsePostDTO> getListPostUser();
 }
