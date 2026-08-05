@@ -18,4 +18,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface PostRepository extends JpaRepository<Post, Integer>{
     Page<Post> findAllPostBy(Pageable pageable);
+    Page<Post> findAllByUserIdOrderByCreatedAtDesc(Pageable pageable, int userId);
 }
