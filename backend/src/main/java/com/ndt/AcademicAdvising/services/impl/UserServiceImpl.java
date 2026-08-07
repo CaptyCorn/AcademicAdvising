@@ -8,6 +8,7 @@ import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
 import com.ndt.AcademicAdvising.dto.RequestUserLoginDTO;
 import com.ndt.AcademicAdvising.dto.RequestUserRegisterDTO;
+import com.ndt.AcademicAdvising.dto.ResponseUserDTO;
 import com.ndt.AcademicAdvising.enums.UserRole;
 import com.ndt.AcademicAdvising.pojo.User;
 import com.ndt.AcademicAdvising.repositories.UserRepository;
@@ -43,6 +44,17 @@ public class UserServiceImpl implements UserService {
     
 
     private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder(12);
+    
+    public ResponseUserDTO toDTO(User u) {
+        ResponseUserDTO dto = new ResponseUserDTO();
+        dto.setName(u.getName());
+        dto.setUsername(u.getUsername());
+        dto.setEmail(u.getEmail());
+        dto.setStudentCode(u.getStudentCode());
+        dto.setAvatar(u.getAvatar());
+        
+        return dto;
+    }
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -57,7 +69,7 @@ public class UserServiceImpl implements UserService {
         return new org.springframework.security.core.userdetails.User(u.getUsername(),
                  u.getPassword(), authorities);
     }
-
+    
     public User mapToEntity(RequestUserRegisterDTO dto) {
         User u = new User();
         u.setFirstName(dto.getFirstName());
@@ -72,7 +84,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void addUser(RequestUserRegisterDTO dto) {
+    public ResponseUserDTO addUser(RequestUserRegisterDTO dto) {
         User u = mapToEntity(dto);
 
         if (dto.getFile() != null && !dto.getFile().isEmpty()) {
@@ -95,7 +107,7 @@ public class UserServiceImpl implements UserService {
             u.setAvatar(this.imageDefault);
         }
 
-        this.userRepo.save(u);
+        return toDTO(this.userRepo.save(u));
     }
 
 }

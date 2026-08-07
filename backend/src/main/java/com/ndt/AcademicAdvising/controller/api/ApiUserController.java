@@ -5,15 +5,19 @@
 package com.ndt.AcademicAdvising.controller.api;
 
 import com.ndt.AcademicAdvising.dto.RequestUserLoginDTO;
+import com.ndt.AcademicAdvising.dto.RequestUserRegisterDTO;
 import com.ndt.AcademicAdvising.services.AuthService;
 import com.ndt.AcademicAdvising.services.UserService;
 import com.ndt.AcademicAdvising.utils.JwtUtils;
+import jakarta.validation.Valid;
 import java.util.Collections;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestAttribute;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -51,5 +55,10 @@ public class ApiUserController {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                 .body("Sai thông tin đăng nhập");
 
+    }
+    
+    @PostMapping("/register")
+    ResponseEntity<?> register(@Valid @ModelAttribute RequestUserRegisterDTO userDTO) {
+        return new ResponseEntity<>(this.userService.addUser(userDTO), HttpStatus.CREATED);
     }
 }
