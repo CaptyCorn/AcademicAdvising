@@ -4,19 +4,19 @@
  */
 package com.ndt.AcademicAdvising.pojo;
 
-import com.ndt.AcademicAdvising.enums.ReportStatus;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import java.util.Date;
+import java.util.Set;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -27,32 +27,29 @@ import org.hibernate.annotations.UpdateTimestamp;
  *
  * @author ngodo
  */
-
 @Entity
-@Table(name = "tbl_report")
+@Table(name = "tbl_document")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Report {
+public class Document {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Integer id;
-    @Column(length = 1000)
-    private String reason;
-    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private ReportStatus reportStatus = ReportStatus.PENDING;
+    private String title;
+    @Column(length = 200)
+    private String source;
     @CreationTimestamp
     @Column(name = "created_at", updatable = false)
     private Date createdAt;
     @UpdateTimestamp
     @Column(name = "updated_at")
     private Date updatedAt;
-    @JoinColumn(name = "sender_id", referencedColumnName = "id")
-    @ManyToOne(optional = false, fetch = FetchType.LAZY)
-    private User sender;
-    @JoinColumn(name = "post_id", referencedColumnName = "id")
-    @ManyToOne(optional = false, fetch = FetchType.LAZY)
-    private Post post;
+    @JoinColumn(name = "document_id", referencedColumnName = "id")
+    @ManyToOne(cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
+    private User user;
+    @OneToMany(cascade = CascadeType.REMOVE, mappedBy = "document")
+    private Set<DocumentChunk> documentChunks;
 
 }

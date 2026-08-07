@@ -19,6 +19,9 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import java.util.Date;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -29,9 +32,12 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 @Entity
 @Table(name = "tbl_payment")
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class Payment {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Integer id;
     @Column(nullable = false)
     private Double price;
@@ -41,8 +47,10 @@ public class Payment {
     @Enumerated(EnumType.STRING)
     @Column(name = "payment_status", nullable = false)
     private PaymentStatus paymentStatus;
-    @Column(name = "transaction_code",length = 255)
+    @Column(name = "transaction_code")
     private String transactionCode;
+    @Column(name = "paid_at")
+    private Date paidAt;
     @CreationTimestamp
     @Column(name = "created_at", updatable = false)
     private Date createdAt;
@@ -52,150 +60,11 @@ public class Payment {
     @JoinColumn(name = "book_id", referencedColumnName = "id")
     @OneToOne
     private Book book;
-    @JoinColumn(name = "user_id", referencedColumnName = "id")
+    @JoinColumn(name = "buyer_id", referencedColumnName = "id")
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
-    private User user;
+    private User buyer;
+    @JoinColumn(name = "seller_id", referencedColumnName = "id")
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    private User seller;
 
-    public Payment() {
-    }
-
-    public Payment(Integer id, Double price, PaymentMethod paymentMethod, PaymentStatus paymentStatus, String transactionCode, Date createdAt, Date updatedAt, Book book, User user) {
-        this.id = id;
-        this.price = price;
-        this.paymentMethod = paymentMethod;
-        this.paymentStatus = paymentStatus;
-        this.transactionCode = transactionCode;
-        this.createdAt = createdAt;
-        this.updatedAt = updatedAt;
-        this.book = book;
-        this.user = user;
-    }
-
-    /**
-     * @return the id
-     */
-    public Integer getId() {
-        return id;
-    }
-
-    /**
-     * @param id the id to set
-     */
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    /**
-     * @return the price
-     */
-    public Double getPrice() {
-        return price;
-    }
-
-    /**
-     * @param price the price to set
-     */
-    public void setPrice(Double price) {
-        this.price = price;
-    }
-
-    /**
-     * @return the paymentMethod
-     */
-    public PaymentMethod getPaymentMethod() {
-        return paymentMethod;
-    }
-
-    /**
-     * @param paymentMethod the paymentMethod to set
-     */
-    public void setPaymentMethod(PaymentMethod paymentMethod) {
-        this.paymentMethod = paymentMethod;
-    }
-
-    /**
-     * @return the paymentStatus
-     */
-    public PaymentStatus getPaymentStatus() {
-        return paymentStatus;
-    }
-
-    /**
-     * @param paymentStatus the paymentStatus to set
-     */
-    public void setPaymentStatus(PaymentStatus paymentStatus) {
-        this.paymentStatus = paymentStatus;
-    }
-
-    /**
-     * @return the transactionCode
-     */
-    public String getTransactionCode() {
-        return transactionCode;
-    }
-
-    /**
-     * @param transactionCode the transactionCode to set
-     */
-    public void setTransactionCode(String transactionCode) {
-        this.transactionCode = transactionCode;
-    }
-
-    /**
-     * @return the createdAt
-     */
-    public Date getCreatedAt() {
-        return createdAt;
-    }
-
-    /**
-     * @param createdAt the createdAt to set
-     */
-    public void setCreatedAt(Date createdAt) {
-        this.createdAt = createdAt;
-    }
-
-    /**
-     * @return the updatedAt
-     */
-    public Date getUpdatedAt() {
-        return updatedAt;
-    }
-
-    /**
-     * @param updatedAt the updatedAt to set
-     */
-    public void setUpdatedAt(Date updatedAt) {
-        this.updatedAt = updatedAt;
-    }
-
-    /**
-     * @return the book
-     */
-    public Book getBook() {
-        return book;
-    }
-
-    /**
-     * @param book the book to set
-     */
-    public void setBook(Book book) {
-        this.book = book;
-    }
-
-    /**
-     * @return the user
-     */
-    public User getUser() {
-        return user;
-    }
-
-    /**
-     * @param user the user to set
-     */
-    public void setUser(User user) {
-        this.user = user;
-    }
-    
-    
 }

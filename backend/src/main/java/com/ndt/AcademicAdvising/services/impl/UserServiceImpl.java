@@ -17,6 +17,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -37,6 +38,9 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private Cloudinary cloudinary;
     
+    @Value("${cloudinary.image.default}")
+    private String imageDefault;
+    
 
     private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder(12);
 
@@ -56,7 +60,8 @@ public class UserServiceImpl implements UserService {
 
     public User mapToEntity(RequestUserRegisterDTO dto) {
         User u = new User();
-        u.setName(dto.getName());
+        u.setFirstName(dto.getFirstName());
+        u.setLastName(dto.getLastName());
         u.setUsername(dto.getUsername());
         u.setPassword(passwordEncoder.encode(dto.getPassword()));
         u.setEmail(dto.getEmail());
@@ -74,13 +79,20 @@ public class UserServiceImpl implements UserService {
             try {
                 Map res = this.cloudinary.uploader().upload(
                         dto.getFile().getBytes(),
-                        ObjectUtils.asMap("resource_type", "auto")
+                        ObjectUtils.asMap(
+                                "folder", "Academic/ImageUser",
+                                "public_id", "user" + dto.getUsername(),
+                                "overwrite", true,
+                                "resource_type", "auto")
                 );
-
                 u.setAvatar(res.get("secure_url").toString());
+                u.setAvatarPublicId(res.get("public_id").toString());
             } catch (IOException ex) {
                 System.getLogger(UserServiceImpl.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
             }
+        }
+        else {
+            u.setAvatar(this.imageDefault);
         }
 
         this.userRepo.save(u);

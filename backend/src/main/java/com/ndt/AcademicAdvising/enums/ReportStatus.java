@@ -8,8 +8,8 @@ package com.ndt.AcademicAdvising.enums;
  *
  * @author ngodo
  */
-public enum PostStatus {
-    APPROVED,
-    REJECTED,
-    HIDDEN
+public enum ReportStatus {
+    PENDING,
+    REVIEWED,
+    REJECTED
 }

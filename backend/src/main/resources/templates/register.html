@@ -44,8 +44,13 @@
                 <form th:action="@{/admin/register}" method="post" th:object="${user}" enctype="multipart/form-data">
 
                     <div class="mb-3">
-                        <label for="fullName" class="form-label">Họ và tên</label>
-                        <input type="text" id="fullName" name="fullName" class="form-control" th:field="*{name}" placeholder="Nhập họ và tên" required>
+                        <label for="firstName" class="form-label">Tên</label>
+                        <input type="text" id="firstName" name="firstName" class="form-control" th:field="*{firstName}" placeholder="Tên" required>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="lastName" class="form-label">Họ</label>
+                        <input type="text" id="lastName" name="lastName" class="form-control" th:field="*{lastName}" placeholder="Họ" required>
                     </div>
 
                     <div class="mb-3">

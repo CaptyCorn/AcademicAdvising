@@ -14,6 +14,9 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import java.util.Date;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -24,12 +27,17 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 @Entity
 @Table(name = "tbl_book_image")
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class BookImage {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Integer id;
-    @Column(name = "image_url", length = 255, nullable = false)
+    @Column(name = "image_url", length = 150, nullable = false)
     private String imageUrl;
+    @Column(name = "image_public_id", length = 150, nullable = false)
+    private String imagePublicId;
     @CreationTimestamp
     @Column(name = "created_at", updatable = false)
     private Date createdAt;
@@ -40,86 +48,4 @@ public class BookImage {
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     private Book book;
 
-    public BookImage() {
-    }
-
-    public BookImage(Integer id, String imageUrl, Date createdAt, Date updatedAt, Book book) {
-        this.id = id;
-        this.imageUrl = imageUrl;
-        this.createdAt = createdAt;
-        this.updatedAt = updatedAt;
-        this.book = book;
-    }
-
-    /**
-     * @return the id
-     */
-    public Integer getId() {
-        return id;
-    }
-
-    /**
-     * @param id the id to set
-     */
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    /**
-     * @return the imageUrl
-     */
-    public String getImageUrl() {
-        return imageUrl;
-    }
-
-    /**
-     * @param imageUrl the imageUrl to set
-     */
-    public void setImageUrl(String imageUrl) {
-        this.imageUrl = imageUrl;
-    }
-
-    /**
-     * @return the createdAt
-     */
-    public Date getCreatedAt() {
-        return createdAt;
-    }
-
-    /**
-     * @param createdAt the createdAt to set
-     */
-    public void setCreatedAt(Date createdAt) {
-        this.createdAt = createdAt;
-    }
-
-    /**
-     * @return the updatedAt
-     */
-    public Date getUpdatedAt() {
-        return updatedAt;
-    }
-
-    /**
-     * @param updatedAt the updatedAt to set
-     */
-    public void setUpdatedAt(Date updatedAt) {
-        this.updatedAt = updatedAt;
-    }
-
-    /**
-     * @return the book
-     */
-    public Book getBook() {
-        return book;
-    }
-
-    /**
-     * @param book the book to set
-     */
-    public void setBook(Book book) {
-        this.book = book;
-    }
-    
-    
 }

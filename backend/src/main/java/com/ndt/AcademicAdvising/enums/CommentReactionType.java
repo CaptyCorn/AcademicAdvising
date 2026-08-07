@@ -8,8 +8,7 @@ package com.ndt.AcademicAdvising.enums;
  *
  * @author ngodo
  */
-public enum PostStatus {
-    APPROVED,
-    REJECTED,
-    HIDDEN
+public enum CommentReactionType {
+    LIKE,
+    DISLIKE
 }

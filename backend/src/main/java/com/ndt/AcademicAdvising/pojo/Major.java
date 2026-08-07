@@ -14,6 +14,9 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import java.util.Date;
 import java.util.Set;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -24,11 +27,14 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 @Entity
 @Table(name = "tbl_major")
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class Major {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Integer id;
-    @Column(length = 255, nullable = false)
+    @Column(nullable = false)
     private String name;
     @CreationTimestamp
     @Column(name = "created_at", updatable = false)
@@ -39,86 +45,4 @@ public class Major {
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "major")
     private Set<Subject> subjects;
 
-    public Major() {
-    }
-
-    public Major(Integer id, String name, Date createdAt, Date updatedAt, Set<Subject> subjects) {
-        this.id = id;
-        this.name = name;
-        this.createdAt = createdAt;
-        this.updatedAt = updatedAt;
-        this.subjects = subjects;
-    }
-
-    /**
-     * @return the id
-     */
-    public Integer getId() {
-        return id;
-    }
-
-    /**
-     * @param id the id to set
-     */
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    /**
-     * @return the name
-     */
-    public String getName() {
-        return name;
-    }
-
-    /**
-     * @param name the name to set
-     */
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    /**
-     * @return the createdAt
-     */
-    public Date getCreatedAt() {
-        return createdAt;
-    }
-
-    /**
-     * @param createdAt the createdAt to set
-     */
-    public void setCreatedAt(Date createdAt) {
-        this.createdAt = createdAt;
-    }
-
-    /**
-     * @return the updatedAt
-     */
-    public Date getUpdatedAt() {
-        return updatedAt;
-    }
-
-    /**
-     * @param updatedAt the updatedAt to set
-     */
-    public void setUpdatedAt(Date updatedAt) {
-        this.updatedAt = updatedAt;
-    }
-
-    /**
-     * @return the subjects
-     */
-    public Set<Subject> getSubjects() {
-        return subjects;
-    }
-
-    /**
-     * @param subjects the subjects to set
-     */
-    public void setSubjects(Set<Subject> subjects) {
-        this.subjects = subjects;
-    }
-    
-    
 }

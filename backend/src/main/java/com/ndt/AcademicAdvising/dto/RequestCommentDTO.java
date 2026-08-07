@@ -7,7 +7,6 @@ package com.ndt.AcademicAdvising.dto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.web.multipart.MultipartFile;
 
 /**
  *
@@ -16,13 +15,6 @@ import org.springframework.web.multipart.MultipartFile;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class RequestUserRegisterDTO {
-    private String firstName;
-    private String lastName;
-    private String username;
-    private String password;
-    private String email;
-    private String studentCode;
-    private String phone;
-    private MultipartFile file;
+public class RequestCommentDTO {
+    private String content;
 }

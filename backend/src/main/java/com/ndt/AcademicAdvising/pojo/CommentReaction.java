@@ -4,7 +4,7 @@
  */
 package com.ndt.AcademicAdvising.pojo;
 
-import com.ndt.AcademicAdvising.enums.ReportStatus;
+import com.ndt.AcademicAdvising.enums.CommentReactionType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -27,32 +27,29 @@ import org.hibernate.annotations.UpdateTimestamp;
  *
  * @author ngodo
  */
-
 @Entity
-@Table(name = "tbl_report")
+@Table(name = "tbl_comment_like")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Report {
+public class CommentReaction {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Integer id;
-    @Column(length = 1000)
-    private String reason;
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
-    private ReportStatus reportStatus = ReportStatus.PENDING;
+    @Column
+    private CommentReactionType type;
     @CreationTimestamp
     @Column(name = "created_at", updatable = false)
     private Date createdAt;
     @UpdateTimestamp
     @Column(name = "updated_at")
     private Date updatedAt;
-    @JoinColumn(name = "sender_id", referencedColumnName = "id")
+    @JoinColumn(name = "user_id", referencedColumnName = "id")
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
-    private User sender;
-    @JoinColumn(name = "post_id", referencedColumnName = "id")
+    private User user;
+    @JoinColumn(name = "comment_id", referencedColumnName = "id")
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
-    private Post post;
-
+    private Comment comment;
+    
 }
