@@ -4,8 +4,10 @@
  */
 package com.ndt.AcademicAdvising.services;
 
+import com.ndt.AcademicAdvising.dto.RequestUpdateUserDTO;
 import com.ndt.AcademicAdvising.dto.RequestUserLoginDTO;
 import com.ndt.AcademicAdvising.dto.RequestUserRegisterDTO;
+import com.ndt.AcademicAdvising.dto.ResponseProfileUserDTO;
 import com.ndt.AcademicAdvising.dto.ResponseUserDTO;
 import com.ndt.AcademicAdvising.pojo.User;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -16,4 +18,6 @@ import org.springframework.security.core.userdetails.UserDetailsService;
  */
 public interface UserService extends UserDetailsService{
     ResponseUserDTO addUser(RequestUserRegisterDTO u);
+    ResponseProfileUserDTO getProfile(String username);
+    ResponseProfileUserDTO updateUser(String username, RequestUpdateUserDTO userDTO);
 }
