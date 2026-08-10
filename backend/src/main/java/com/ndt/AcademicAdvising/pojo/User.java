@@ -50,7 +50,7 @@ public class User implements Serializable{
     private String password;
     @Column(name = "student_code", length = 15, nullable = false, unique = true)
     private String studentCode;
-    @Column(length = 11, nullable = false, unique = true)
+    @Column(length = 11, unique = true)
     private String phone;
     @Column(length = 150)
     private String avatar;
