@@ -8,7 +8,6 @@ import com.ndt.AcademicAdvising.dto.ResponseMajorDTO;
 import com.ndt.AcademicAdvising.pojo.Major;
 import com.ndt.AcademicAdvising.repositories.MajorRepository;
 import com.ndt.AcademicAdvising.services.MajorService;
-import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -45,7 +44,7 @@ public class MajorServiceImpl implements MajorService{
     public ResponseMajorDTO createMajor(String name) {
         if (!name.isBlank()) {
             Major major = this.majorRepo.findByName(name);
-            if (major != null) {
+            if (major == null) {
                 Major m = new Major();
                 m.setName(name);
                  return toDTO(this.majorRepo.save(m));
