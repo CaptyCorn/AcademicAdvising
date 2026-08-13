@@ -4,7 +4,6 @@
  */
 package com.ndt.AcademicAdvising.dto;
 
-import lombok.Builder;
 import lombok.Data;
 
 /**

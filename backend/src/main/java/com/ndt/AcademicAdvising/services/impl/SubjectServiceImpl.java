@@ -13,8 +13,6 @@ import com.ndt.AcademicAdvising.services.SubjectService;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 /**
@@ -52,7 +50,7 @@ public class SubjectServiceImpl implements SubjectService{
             s.setName(name);
             s.setDescription(description);
             s.setMajor(m);
-            return toDTO(s);
+            return toDTO(this.subjectRepo.save(s));
         }
         else throw new IllegalArgumentException("Môn này đã tồn tại");
     }
@@ -65,7 +63,7 @@ public class SubjectServiceImpl implements SubjectService{
     @Override
     public void deleteSubject(int subjectId) {
         if (this.subjectRepo.existsById(subjectId)) {
-            this.majorRepo.deleteById(subjectId);
+            this.subjectRepo.deleteById(subjectId);
         }
         else throw new IllegalArgumentException("Không tồn tại môn học này");
     }
