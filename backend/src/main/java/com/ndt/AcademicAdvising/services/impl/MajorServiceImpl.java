@@ -8,7 +8,10 @@ import com.ndt.AcademicAdvising.dto.ResponseMajorDTO;
 import com.ndt.AcademicAdvising.pojo.Major;
 import com.ndt.AcademicAdvising.repositories.MajorRepository;
 import com.ndt.AcademicAdvising.services.MajorService;
+import java.util.List;
+import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
 /**
@@ -28,10 +31,10 @@ public class MajorServiceImpl implements MajorService{
         return dto;
     }
 
-//    @Override
-//    public List<ResponseMajorDTO> getMajors() {
-//        return this.majorRepo.findAll()
-//    }
+    @Override
+    public Page<ResponseMajorDTO> getMajors(Map<String, String> params) {
+        return this.majorRepo.getListMajor(params).map(this::toDTO);
+    }
 
     @Override
     public ResponseMajorDTO getMajorById(int majorId) {

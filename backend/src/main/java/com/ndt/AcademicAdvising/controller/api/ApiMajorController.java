@@ -12,10 +12,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
@@ -29,17 +31,22 @@ public class ApiMajorController {
     @Autowired
     private MajorService majorService;
     
-//    @GetMapping("/majors")
-//    ResponseEntity<ResponseObjectDTO> list() {
-//        try {
-//            return ResponseEntity.status(HttpStatus.OK)
-//                    .body(
-//                            new ResponseObjectDTO("OK", "Get major successfully", this.majorService.getMajors()));
-//        } catch (IllegalArgumentException i) {
-//            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-//                    .body(new ResponseObjectDTO("Fail", i.getMessage(), null));
-//        }
-//    }
+    @GetMapping("/majors")
+    ResponseEntity<ResponseObjectDTO> list(@RequestParam Map<String, String> params) {
+        try {
+            return ResponseEntity.status(HttpStatus.OK)
+                    .body(new ResponseObjectDTO(
+                            "OK", 
+                            "Get majors successfully", 
+                            this.majorService.getMajors(params)));
+        } catch (IllegalArgumentException i) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(new ResponseObjectDTO(
+                            "Fail", 
+                            i.getMessage(), 
+                            null));
+        }
+    }
     
     @PostMapping("/major")
     @PreAuthorize("hasRole('ADMIN')")
@@ -49,7 +56,7 @@ public class ApiMajorController {
             return ResponseEntity
                     .status(HttpStatus.CREATED)
                     .body(new ResponseObjectDTO(
-                            "CREATED", 
+                            "Success", 
                             "Insert major successfully", 
                             this.majorService.createMajor(name)));
                     
@@ -71,7 +78,7 @@ public class ApiMajorController {
             return ResponseEntity
                     .status(HttpStatus.OK)
                     .body(new ResponseObjectDTO(
-                            "CREATED", 
+                            "Success", 
                             "Delete major successfully", 
                             null));
                     

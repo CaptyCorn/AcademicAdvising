@@ -5,6 +5,7 @@
 package com.ndt.AcademicAdvising.repositories;
 
 import com.ndt.AcademicAdvising.pojo.Major;
+import com.ndt.AcademicAdvising.repositories.customes.CustomeMajorRepository;
 import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
@@ -14,6 +15,6 @@ import org.springframework.stereotype.Repository;
  * @author ngodo
  */
 @Repository
-public interface MajorRepository extends JpaRepository<Major, Integer>{
+public interface MajorRepository extends JpaRepository<Major, Integer>, CustomeMajorRepository{
     Major findByName(String name);
 }

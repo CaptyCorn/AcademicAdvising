@@ -5,14 +5,15 @@
 package com.ndt.AcademicAdvising.services;
 
 import com.ndt.AcademicAdvising.dto.ResponseMajorDTO;
-import java.util.List;
+import java.util.Map;
+import org.springframework.data.domain.Page;
 
 /**
  *
  * @author ngodo
  */
 public interface MajorService {
-//    List<ResponseMajorDTO> getMajors();
+    Page<ResponseMajorDTO> getMajors(Map<String, String> params);
     ResponseMajorDTO getMajorById(int majorId);
     ResponseMajorDTO createMajor(String name);
     void deleteMajor(int majorId);
