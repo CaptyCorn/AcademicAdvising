@@ -45,8 +45,7 @@ public class Book {
     private Integer id;
     @Column(nullable = false)
     private String name;
-    @Column
-    @Lob
+    @Column(columnDefinition = "TEXT")
     private String description;
     @Column(nullable = false)
     private Double price;
