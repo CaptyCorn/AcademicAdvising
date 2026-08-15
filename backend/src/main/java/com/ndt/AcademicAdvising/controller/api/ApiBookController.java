@@ -83,6 +83,31 @@ public class ApiBookController {
         }
     }
     
+    @GetMapping("/books/user")
+    ResponseEntity<ResponseObjectDTO> bookUser(@RequestParam Map<String, String> params) {
+        try {
+            return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(
+                        new ResponseObjectDTO(
+                                "Success", 
+                                "Get books successfully", 
+                                this.bookService.getListBookById(params)
+                        )
+                );
+        } catch (IllegalArgumentException i) {
+            return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(
+                        new ResponseObjectDTO(
+                                "Fail", 
+                                i.getMessage(), 
+                                null
+                        )
+                );
+        }
+    }
+    
     @PostMapping("/book")
     ResponseEntity<?> insert(@Valid @ModelAttribute RequestBookDTO dto) {
         try {

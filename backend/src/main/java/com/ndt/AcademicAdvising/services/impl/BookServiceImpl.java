@@ -202,6 +202,12 @@ public class BookServiceImpl implements BookService{
         );
         return toDTODetail(b);
     }
+
+    @Override
+    public Page<ResponseBookDTO> getListBookById(Map<String, String> params) {
+        User u = getCurrentUser();
+        return this.bookRepo.getListBookById(u.getId(), params).map(this::toDTO);
+    }
     
     
 }

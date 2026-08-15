@@ -14,4 +14,5 @@ import org.springframework.data.domain.Page;
  */
 public interface CustomBookRepository {
     public Page<Book> getListBook(Map<String, String> params);
+    public Page<Book> getListBookById(int userId, Map<String, String> params);
 }

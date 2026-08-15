@@ -18,6 +18,7 @@ import org.springframework.data.domain.Page;
  */
 public interface BookService {
     Page<ResponseBookDTO> getListBook(Map<String, String> params);
+    Page<ResponseBookDTO> getListBookById(Map<String, String> params);
     ResponseBookCreateDTO createBook(RequestBookDTO dto);
     void deleteBook(int bookId);
     ResponseBookDetailDTO getBookId(int bookId);
