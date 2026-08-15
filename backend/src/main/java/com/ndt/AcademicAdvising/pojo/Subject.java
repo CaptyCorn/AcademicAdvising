@@ -11,7 +11,6 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
@@ -19,7 +18,9 @@ import java.util.Date;
 import java.util.Set;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -30,7 +31,8 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 @Entity
 @Table(name = "tbl_subject")
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 public class Subject {
@@ -52,12 +54,7 @@ public class Subject {
     @JoinColumn(name = "major_id", referencedColumnName = "id")
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     private Major major;
-    @JoinTable(
-            name = "tbl_subject_book", 
-            joinColumns = {@JoinColumn(name = "subject_id", referencedColumnName = "id")}, 
-            inverseJoinColumns = {@JoinColumn(name = "book_id", referencedColumnName = "id")}
-    )
-    @ManyToMany
+    @ManyToMany(mappedBy = "subjects")
     private Set<Book> books;
 
 }
