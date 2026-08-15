@@ -134,6 +134,36 @@
             <version>0.1.6</version>
             <scope>compile</scope>
         </dependency>
+        
+        <!-- Source: https://mvnrepository.com/artifact/dev.langchain4j/langchain4j-open-ai -->
+        <dependency>
+            <groupId>dev.langchain4j</groupId>
+            <artifactId>langchain4j-open-ai</artifactId>
+            <version>1.15.0</version>
+            <scope>compile</scope>
+        </dependency>
+        
+        <!-- Source: https://mvnrepository.com/artifact/dev.langchain4j/langchain4j-pgvector -->
+        <dependency>
+            <groupId>dev.langchain4j</groupId>
+            <artifactId>langchain4j-pgvector</artifactId>
+            <version>1.15.0-beta25</version>
+            <scope>compile</scope>
+        </dependency>
+        
+        <!-- Source: https://mvnrepository.com/artifact/dev.langchain4j/langchain4j-document-parser-apache-pdfbox -->
+        <dependency>
+            <groupId>dev.langchain4j</groupId>
+            <artifactId>langchain4j-document-parser-apache-pdfbox</artifactId>
+            <version>1.15.0-beta25</version>
+            <scope>compile</scope>
+        </dependency>
+        
+        <dependency>
+            <groupId>dev.langchain4j</groupId>
+            <artifactId>langchain4j-document-parser-markdown</artifactId>
+            <version>1.15.0-beta25</version>
+        </dependency>
     </dependencies>
 
     <build>
