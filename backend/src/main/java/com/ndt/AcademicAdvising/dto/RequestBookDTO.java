@@ -6,6 +6,7 @@ package com.ndt.AcademicAdvising.dto;
 
 import com.ndt.AcademicAdvising.enums.BookCondition;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import java.util.List;
 import lombok.Data;
 import org.springframework.web.multipart.MultipartFile;
@@ -16,16 +17,15 @@ import org.springframework.web.multipart.MultipartFile;
  */
 @Data
 public class RequestBookDTO {
-    @NotBlank(message = "Tên sách không được để trống.")
+    @NotBlank(message = "Chưa nhập tên sách.")
     private String name;
     
     @NotBlank(message = "Mô tả sách không được để trống.")
     private String description;
     
-    @NotBlank(message = "Giá không được để trống.")
-    private double price;
+    @NotNull(message = "Chưa nhập giá sách.")
+    private Double price;
     
-    @NotBlank(message = "Tình trạng sách không được để trống.")
     private BookCondition condition;
     
     private List<Integer> subjectIds;
