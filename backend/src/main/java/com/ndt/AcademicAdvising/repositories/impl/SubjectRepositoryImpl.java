@@ -41,9 +41,40 @@ public class SubjectRepositoryImpl implements CustomSubjectRepository{
         CriteriaBuilder builder = entityManager.getCriteriaBuilder();
         CriteriaQuery<Subject> query = builder.createQuery(Subject.class);
         Root root = query.from(Subject.class);
+        query.select(root).distinct(true);
         
+        List<Predicate> predicates = buildPredicate(builder, root, params);
+        
+        if (!predicates.isEmpty()) {
+            query.where(predicates.toArray(Predicate[]::new));
+        }
+        
+        int page = 0;
+        if (params != null && params.get("page") != null) {
+            page = Integer.parseInt(params.get("page"));
+        }
+        
+        TypedQuery<Subject> q = entityManager.createQuery(query);
+        q.setFirstResult(page  * subjectSize);
+        q.setMaxResults(subjectSize);       
+        List<Subject> resultList = q.getResultList();
+        
+        CriteriaQuery<Long> countQuery = builder.createQuery(Long.class);
+        Root countRoot = countQuery.from(Subject.class);
+        
+        List<Predicate> countPredicates = buildPredicate(builder, root, params);
+        
+        countQuery.select(builder.countDistinct(countRoot));
+        
+        if (!countPredicates.isEmpty()) {
+            countQuery.where(countPredicates.toArray(Predicate[]::new));
+        }
+        Long totalSubject = entityManager.createQuery(countQuery).getSingleResult();
+        return new PageImpl<>(resultList, PageRequest.of(page, subjectSize), totalSubject);
+    }
+    
+    private List<Predicate> buildPredicate(CriteriaBuilder builder, Root<Subject> root, Map<String, String> params) {
         List<Predicate> predicates = new ArrayList<>();
-        
         if (params != null) {
             String kw = params.get("kw");
             if (kw != null && !kw.isEmpty()) {
@@ -55,23 +86,8 @@ public class SubjectRepositoryImpl implements CustomSubjectRepository{
                 predicates.add(builder.equal(root.get("major").get("id"), Integer.valueOf(majorId)));
             }
         }
-        if (!predicates.isEmpty()) {
-            query.where(predicates.toArray(Predicate[]::new));
-        }
         
-        int page = params.containsKey("page") ? Integer.parseInt(params.get("page")) : 0;
-        
-        TypedQuery<Subject> q = entityManager.createQuery(query);
-        q.setFirstResult(page  * subjectSize);
-        q.setMaxResults(subjectSize);
-        
-        List<Subject> resultList = q.getResultList();
-        
-        CriteriaQuery<Long> countQuery = builder.createQuery(Long.class);
-        Root countRoot = countQuery.from(Subject.class);
-        countQuery.select(builder.count(countRoot)).where(predicates.toArray(Predicate[]::new));
-        Long totalSubject = entityManager.createQuery(countQuery).getSingleResult();
-        return new PageImpl<>(resultList, PageRequest.of(page, subjectSize), totalSubject);
+        return predicates;
     }
     
 }
