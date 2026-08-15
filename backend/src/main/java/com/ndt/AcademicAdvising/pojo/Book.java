@@ -16,16 +16,20 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
 import jakarta.persistence.Lob;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Set;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -36,7 +40,8 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 @Entity
 @Table(name = "tbl_book")
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 public class Book {
@@ -45,8 +50,7 @@ public class Book {
     private Integer id;
     @Column(nullable = false)
     private String name;
-    @Column
-    @Lob
+    @Column(columnDefinition = "TEXT")
     private String description;
     @Column(nullable = false)
     private Double price;
@@ -62,7 +66,12 @@ public class Book {
     @UpdateTimestamp
     @Column(name = "updated_at")
     private Date updatedAt;
-    @ManyToMany(mappedBy = "books")
+    @JoinTable(
+            name = "tbl_book_subject", 
+            joinColumns = {@JoinColumn(name = "book_id", referencedColumnName = "id")}, 
+            inverseJoinColumns = {@JoinColumn(name = "subject_id", referencedColumnName = "id")}
+    )
+    @ManyToMany
     private Set<Subject> subjects;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "book")
     private Set<BookImage> bookImages;
