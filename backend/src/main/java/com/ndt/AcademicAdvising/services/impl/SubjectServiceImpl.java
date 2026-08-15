@@ -30,6 +30,7 @@ public class SubjectServiceImpl implements SubjectService{
     
     private ResponseSubjectDTO toDTO(Subject s) {
         ResponseSubjectDTO dto = new ResponseSubjectDTO();
+        dto.setId(s.getId());
         dto.setName(s.getName());
         dto.setDescription(s.getDescription());
         dto.setMajorId(s.getMajor().getId());

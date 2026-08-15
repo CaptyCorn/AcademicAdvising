@@ -6,7 +6,6 @@ package com.ndt.AcademicAdvising.repositories.impl;
 
 import com.ndt.AcademicAdvising.pojo.Subject;
 import com.ndt.AcademicAdvising.repositories.SubjectRepository;
-import com.ndt.AcademicAdvising.repositories.customes.CustomeSubjectRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.TypedQuery;
@@ -22,13 +21,14 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Repository;
+import com.ndt.AcademicAdvising.repositories.custom.CustomSubjectRepository;
 
 /**
  *
  * @author ngodo
  */
 @Repository
-public class SubjectRepositoryImpl implements CustomeSubjectRepository{
+public class SubjectRepositoryImpl implements CustomSubjectRepository{
 
     @PersistenceContext
     private EntityManager entityManager;
