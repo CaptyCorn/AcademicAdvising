@@ -36,14 +36,20 @@ public class AIConfigs {
     @Value("${open.ai.api.key}")
     private String apiKey;
     
+    @Value("${spring.datasource.username}")
+    private String dbUsername;
+    
+    @Value("${spring.datasource.password}")
+    private String dbPassword;
+    
     @Bean
     public EmbeddingStore<TextSegment> embeddingStrore() {
         return PgVectorEmbeddingStore.builder()
                 .host("localhost")
                 .port(5555)
-                .database("rag")
-                .user("rag")
-                .password("1234")
+                .database("academic")
+                .user(dbUsername)
+                .password(dbPassword)
                 .table("tbl_document_chunk")
                 .dimension(embeddingModel().dimension())
                 .build();
