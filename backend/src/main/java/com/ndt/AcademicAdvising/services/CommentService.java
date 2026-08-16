@@ -16,6 +16,7 @@ public interface CommentService {
     Comment getComment(int postId);
     Page<ResponseCommentDTO> getComments (int postId);
     ResponseCommentDTO addComment(String content, int postId);
+    void addCommentAI(String content, int postId);
     ResponseCommentDTO updateComment(int commentId, String content);
     void deleteComment(int commentId);
 }

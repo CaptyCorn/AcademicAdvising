@@ -4,7 +4,6 @@
  */
 package com.ndt.AcademicAdvising.services.impl;
 
-import com.ndt.AcademicAdvising.dto.RequestChatDTO;
 import com.ndt.AcademicAdvising.rag.RAGAssistant;
 import com.ndt.AcademicAdvising.services.AIService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +19,7 @@ public class AIServiceImpl implements AIService{
     private RAGAssistant ragService;
 
     @Override
-    public String getMessage(RequestChatDTO request) {
-        return ragService.chat(request.getUserId(), request.getQuestion());
+    public String getMessage(String question) {
+        return ragService.chat(question);
     }
 }

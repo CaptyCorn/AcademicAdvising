@@ -4,12 +4,11 @@
  */
 package com.ndt.AcademicAdvising.services;
 
-import com.ndt.AcademicAdvising.dto.RequestChatDTO;
 
 /**
  *
  * @author ngodo
  */
 public interface AIService {
-    String getMessage(RequestChatDTO request);
+    String getMessage(String question);
 }

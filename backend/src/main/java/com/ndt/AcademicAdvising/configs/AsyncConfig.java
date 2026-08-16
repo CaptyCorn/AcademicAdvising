@@ -2,17 +2,17 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package com.ndt.AcademicAdvising.dto;
+package com.ndt.AcademicAdvising.configs;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.scheduling.annotation.EnableAsync;
 
 /**
  *
  * @author ngodo
  */
-@Data
-@AllArgsConstructor
-public class ResponseChatDTO {
-    private String response;
+@Configuration
+@EnableAsync
+public class AsyncConfig {
+    
 }

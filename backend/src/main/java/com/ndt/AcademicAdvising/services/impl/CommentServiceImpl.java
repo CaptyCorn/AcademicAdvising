@@ -101,6 +101,18 @@ public class CommentServiceImpl implements CommentService{
         
     }
 
+    @Override
+    public void addCommentAI(String content, int postId) {
+        if (content == null || content.isBlank())
+            throw new IllegalArgumentException("Nội dung không được để trống.");
+        
+        Comment c = new Comment();
+        c.setContent(content);
+        c.setPost(this.postRepo.findById(postId).orElseThrow(() -> new IllegalArgumentException("Bài đăng không tồn tại")));
+        c.setUser(this.userRepo.findByUsername("ai_agent"));  
+        this.commentRepo.save(c);
+    }
+
     
     
 }
