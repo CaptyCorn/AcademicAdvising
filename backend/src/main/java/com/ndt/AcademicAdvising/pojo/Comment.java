@@ -38,8 +38,7 @@ public class Comment {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Integer id;
-    @Column(nullable = false)
-    @Lob
+    @Column(columnDefinition = "TEXT", nullable = false)
     private String content;
     @CreationTimestamp
     @Column(name = "created_at", updatable = false)

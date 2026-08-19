@@ -97,9 +97,6 @@ public class User implements Serializable{
     
     @OneToMany(cascade = CascadeType.REMOVE, mappedBy = "user")
     private Set<CommentReaction> commentReactions;
-    
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
-    private Set<Document> documents;
 
     @Transient
     public String getName() {

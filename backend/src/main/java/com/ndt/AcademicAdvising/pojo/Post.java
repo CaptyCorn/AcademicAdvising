@@ -4,6 +4,7 @@
  */
 package com.ndt.AcademicAdvising.pojo;
 
+import com.ndt.AcademicAdvising.enums.AIStatus;
 import com.ndt.AcademicAdvising.enums.PostStatus;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -15,7 +16,6 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.Lob;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
@@ -41,12 +41,14 @@ public class Post {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Integer id;
-    @Column(nullable = false)
-    @Lob
+    @Column(columnDefinition = "TEXT", nullable = false)
     private String content;
     @Enumerated(EnumType.STRING)
     @Column(name = "post_status")
     private PostStatus postStatus = PostStatus.APPROVED;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "ai_status")
+    private AIStatus aiStatus = AIStatus.PENDING;
     @CreationTimestamp
     @Column(name = "created_at", updatable = false)
     private Date createdAt;
