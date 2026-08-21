@@ -47,8 +47,6 @@ public class RequestUserRegisterDTO {
     @Email(message = "Email không dúng định dạng")
     private String email;
     
-    @NotBlank(message = "Mã số sinh viên không được để trống")
-    @Size(min = 10, max = 15, message = "Mã số sinh viên phải từ 10 đến 15 kí tự")
     private String studentCode;
     private String phone;
     private MultipartFile file;
