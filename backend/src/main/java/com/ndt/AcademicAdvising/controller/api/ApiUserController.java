@@ -47,19 +47,37 @@ public class ApiUserController {
     private JwtUtils jwtUtils;
     
     @PostMapping("/login")
-    ResponseEntity<?> login(@RequestBody RequestUserLoginDTO user) {
+    ResponseEntity<ResponseObjectDTO> login(@RequestBody RequestUserLoginDTO user) {
         if (this.authService.verify(user)) {
             try {
                 String token = this.jwtUtils.generateToken(user.getUsername());
-                return ResponseEntity.ok()
-                        .body(Collections.singletonMap("token", token));
+                return ResponseEntity
+                        .status(HttpStatus.OK)
+                        .body(
+                                new ResponseObjectDTO(
+                                        "Success", 
+                                        "Đăng nhập thành công", 
+                                        token)
+                        );
             } catch (Exception ex) {
-                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                        .body("Lỗi tạo JWT");
+                return ResponseEntity
+                        .status(HttpStatus.OK)
+                        .body(
+                                new ResponseObjectDTO(
+                                        "Fail", 
+                                        "Lỗi tạo JWT", 
+                                        null)
+                        );
             }
         }
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                .body("Sai thông tin đăng nhập");
+        return ResponseEntity
+                        .status(HttpStatus.OK)
+                        .body(
+                                new ResponseObjectDTO(
+                                        "Fail", 
+                                        "Sai thông tin đăng nhập", 
+                                        null)
+                        );
 
     }
     

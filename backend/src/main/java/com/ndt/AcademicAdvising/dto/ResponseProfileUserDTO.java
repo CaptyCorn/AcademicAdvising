@@ -4,6 +4,7 @@
  */
 package com.ndt.AcademicAdvising.dto;
 
+import com.ndt.AcademicAdvising.enums.UserRole;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -23,4 +24,5 @@ public class ResponseProfileUserDTO {
     private String studentCode;
     private String phone;
     private String avatar;
+    private UserRole role;
 }

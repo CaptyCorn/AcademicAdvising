@@ -9,6 +9,7 @@ import com.ndt.AcademicAdvising.services.AuthService;
 import com.ndt.AcademicAdvising.utils.JwtUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
@@ -22,20 +23,19 @@ public class AuthServiceImpl implements AuthService {
 
     @Autowired
     private AuthenticationManager authenticationManager;
-    
-    @Autowired
-    private JwtUtils jwtUtil;
 
     @Override
     public Boolean verify(RequestUserLoginDTO user) {
-        Authentication authentication
+        try {
+            Authentication authentication
                 = this.authenticationManager.authenticate(
                         new UsernamePasswordAuthenticationToken(
                                 user.getUsername(), user.getPassword()));
-        if (authentication.isAuthenticated()) {
-            return true;
+            
+            return authentication.isAuthenticated();
+        } catch (BadCredentialsException e) {
+            return false;
         }
-        return false;
     }
 
 }

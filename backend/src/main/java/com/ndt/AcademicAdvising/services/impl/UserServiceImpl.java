@@ -67,6 +67,7 @@ public class UserServiceImpl implements UserService {
         dto.setStudentCode(u.getStudentCode());
         dto.setPhone(u.getPhone());
         dto.setAvatar(u.getAvatar());
+        dto.setRole(u.getUserRole());
         
         return dto;
     }
