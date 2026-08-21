@@ -26,90 +26,140 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/ouacademic")
 public class ApiCommentController {
-    
+
     @Autowired
     private CommentService commentService;
-    
+
     @GetMapping("/posts/{postId}/comments")
     ResponseEntity<ResponseObjectDTO> list(@PathVariable(value = "postId") int postId) {
         try {
             return ResponseEntity
                     .status(HttpStatus.OK)
-                    .body(new ResponseObjectDTO(
-                            "Success", 
-                            "Get comments successfully", 
-                            this.commentService.getComments(postId)
-                    ));
+                    .body(
+                            new ResponseObjectDTO(
+                                    Boolean.TRUE,
+                                    200,
+                                    "Lấy danh sách comment thành công",
+                                    this.commentService.getComments(postId)
+                            ));
         } catch (Exception e) {
             return ResponseEntity
-                    .status(HttpStatus.BAD_REQUEST)
-                    .body(new ResponseObjectDTO(
-                            "Fail", 
-                            "Can not get comments", 
-                            null
-                    ));
+                    .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(
+                            new ResponseObjectDTO(
+                                    Boolean.FALSE,
+                                    500,
+                                    "Lỗi hệ thống",
+                                    null)
+                    );
         }
     }
-    
+
     @PostMapping("/posts/{postId}/comment")
-    ResponseEntity<ResponseObjectDTO> insert(@PathVariable(value = "postId") int postId, 
-                                            @RequestBody RequestCommentDTO comment) {
+    ResponseEntity<ResponseObjectDTO> insert(@PathVariable(value = "postId") int postId,
+            @RequestBody RequestCommentDTO comment) {
         try {
             return ResponseEntity
                     .status(HttpStatus.CREATED)
-                    .body(new ResponseObjectDTO(
-                            "Success", 
-                            "Create comments successfully", 
-                            this.commentService.addComment(comment.getContent(), postId)
-                    )); 
+                    .body(
+                            new ResponseObjectDTO(
+                                    Boolean.TRUE,
+                                    201,
+                                    "Thêm bình luận thành công",
+                                    this.commentService.addComment(comment.getContent(), postId)
+                            ));
         } catch (IllegalArgumentException i) {
             return ResponseEntity
                     .status(HttpStatus.BAD_REQUEST)
-                    .body(new ResponseObjectDTO(
-                            "Fail", 
-                            i.getMessage(), 
-                            null
-                    )); 
+                    .body(
+                            new ResponseObjectDTO(
+                                    Boolean.FALSE,
+                                    400,
+                                    i.getMessage(),
+                                    null)
+                    );
+        } catch (Exception e) {
+            return ResponseEntity
+                    .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(
+                            new ResponseObjectDTO(
+                                    Boolean.FALSE,
+                                    500,
+                                    "Lỗi hệ thống",
+                                    null)
+                    );
         }
     }
-    
+
     @PutMapping("/posts/{postId}/comments/{commentId}")
-    ResponseEntity<ResponseObjectDTO> update(@PathVariable(value = "commentId") int commentId, 
-                                            @RequestBody RequestCommentDTO comment) {
+    ResponseEntity<ResponseObjectDTO> update(@PathVariable(value = "commentId") int commentId,
+            @RequestBody RequestCommentDTO comment) {
         try {
             return ResponseEntity
                     .status(HttpStatus.OK)
-                    .body(new ResponseObjectDTO(
-                            "Success", 
-                            "Update comments successfully", 
-                            this.commentService.updateComment(commentId, comment.getContent())
-                    )); 
+                    .body(
+                            new ResponseObjectDTO(
+                                    Boolean.TRUE,
+                                    200,
+                                    "Cập nhật bình luận thành công",
+                                    this.commentService.updateComment(commentId, comment.getContent())
+                            ));
         } catch (IllegalArgumentException i) {
             return ResponseEntity
                     .status(HttpStatus.BAD_REQUEST)
-                    .body(new ResponseObjectDTO(
-                            "Fail", 
-                            i.getMessage(), 
-                            null
-                    )); 
+                    .body(
+                            new ResponseObjectDTO(
+                                    Boolean.FALSE,
+                                    400,
+                                    i.getMessage(),
+                                    null)
+                    );
+        } catch (Exception e) {
+            return ResponseEntity
+                    .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(
+                            new ResponseObjectDTO(
+                                    Boolean.FALSE,
+                                    500,
+                                    "Lỗi hệ thống",
+                                    null)
+                    );
         }
     }
-    
+
     @DeleteMapping("/posts/{postId}/comments/{commentId}")
     ResponseEntity<ResponseObjectDTO> delete(@PathVariable(value = "commentId") int commentId) {
         try {
             this.commentService.deleteComment(commentId);
             return ResponseEntity
-                    .status(HttpStatus.NO_CONTENT)
-                    .body(new ResponseObjectDTO("Success", "Delete comment successfully", null));
+                    .status(HttpStatus.OK)
+                    .body(
+                            new ResponseObjectDTO(
+                                    Boolean.TRUE,
+                                    200,
+                                    "Xoá bình luận thành công",
+                                    null)
+                    );
         } catch (IllegalArgumentException i) {
             return ResponseEntity
                     .status(HttpStatus.BAD_REQUEST)
-                    .body(new ResponseObjectDTO(
-                            "Fail", 
-                            i.getMessage(), 
-                            null
-                    )); 
+                    .body(
+                            new ResponseObjectDTO(
+                                    Boolean.FALSE,
+                                    400,
+                                    i.getMessage(),
+                                    null)
+                    );
+        } catch (Exception e) {
+            return ResponseEntity
+                    .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(
+                            new ResponseObjectDTO(
+                                    Boolean.FALSE,
+                                    500,
+                                    "Lỗi hệ thống",
+                                    null)
+                    );
         }
     }
 }

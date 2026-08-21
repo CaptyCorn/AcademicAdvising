@@ -27,67 +27,115 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/ouacademic")
 public class ApiSubjectController {
-    
+
     @Autowired
     private SubjectService subjectService;
-    
+
     @GetMapping("/subjects")
     ResponseEntity<ResponseObjectDTO> list(@RequestParam Map<String, String> params) {
         try {
             return ResponseEntity
-                .status(HttpStatus.OK)
-                .body(new ResponseObjectDTO(
-                        "Success", 
-                        "Get subjects successfully", 
-                        this.subjectService.getSubjects(params)));
+                    .status(HttpStatus.OK)
+                    .body(
+                            new ResponseObjectDTO(
+                                    Boolean.TRUE,
+                                    200,
+                                    "Lấy danh sách môn học thành công",
+                                    this.subjectService.getSubjects(params))
+                    );
         } catch (IllegalArgumentException i) {
             return ResponseEntity
-                .status(HttpStatus.BAD_REQUEST)
-                .body(new ResponseObjectDTO(
-                        "Fail", 
-                        i.getMessage(), 
-                        null));
+                    .status(HttpStatus.BAD_REQUEST)
+                    .body(
+                            new ResponseObjectDTO(
+                                    Boolean.FALSE,
+                                    400,
+                                    i.getMessage(),
+                                    null)
+                    );
+        } catch (Exception e) {
+            return ResponseEntity
+                    .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(
+                            new ResponseObjectDTO(
+                                    Boolean.FALSE,
+                                    500,
+                                    "Lỗi hệ thống",
+                                    null)
+                    );
         }
     }
-    
+
     @PostMapping("/subject")
     @PreAuthorize("hasRole('ADMIN')")
     ResponseEntity<ResponseObjectDTO> create(@RequestBody Map<String, String> data) {
         try {
             return ResponseEntity
-                .status(HttpStatus.CREATED)
-                .body(new ResponseObjectDTO(
-                        "Success", 
-                        "Create subject successfully", 
-                        this.subjectService.createSubject(data)));
+                    .status(HttpStatus.CREATED)
+                    .body(
+                            new ResponseObjectDTO(
+                                    Boolean.TRUE,
+                                    201,
+                                    "Tạo môn học thành công",
+                                    this.subjectService.createSubject(data))
+                    );
         } catch (IllegalArgumentException i) {
             return ResponseEntity
-                .status(HttpStatus.BAD_REQUEST)
-                .body(new ResponseObjectDTO(
-                        "Fail", 
-                        i.getMessage(), 
-                        null));
+                    .status(HttpStatus.BAD_REQUEST)
+                    .body(
+                            new ResponseObjectDTO(
+                                    Boolean.FALSE,
+                                    400,
+                                    i.getMessage(),
+                                    null)
+                    );
+        } catch (Exception e) {
+            return ResponseEntity
+                    .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(
+                            new ResponseObjectDTO(
+                                    Boolean.FALSE,
+                                    500,
+                                    "Lỗi hệ thống",
+                                    null)
+                    );
         }
     }
-    
+
     @DeleteMapping("/subjects/{subjectId}")
     @PreAuthorize("hasRole('ADMIN')")
     ResponseEntity<ResponseObjectDTO> delete(@PathVariable(name = "subjectId") int subjectId) {
         try {
             this.subjectService.deleteSubject(subjectId);
             return ResponseEntity
-                .status(HttpStatus.OK)
-                .body(new ResponseObjectDTO(
-                        "Success", 
-                        "Delete subject successfully", 
-                        null));
+                    .status(HttpStatus.OK)
+                    .body(
+                            new ResponseObjectDTO(
+                                    Boolean.TRUE,
+                                    200,
+                                    "Xoá môn học thành công",
+                                    null)
+                    );
         } catch (IllegalArgumentException i) {
             return ResponseEntity
-                .status(HttpStatus.BAD_REQUEST)
-                .body(new ResponseObjectDTO(
-                        "Fail", 
-                        i.getMessage(), 
-                        null));
+                    .status(HttpStatus.BAD_REQUEST)
+                    .body(
+                            new ResponseObjectDTO(
+                                    Boolean.FALSE,
+                                    400,
+                                    i.getMessage(),
+                                    null)
+                    );
+        } catch (Exception e) {
+            return ResponseEntity
+                    .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(
+                            new ResponseObjectDTO(
+                                    Boolean.FALSE,
+                                    500,
+                                    "Lỗi hệ thống",
+                                    null)
+                    );
         }
     }
 }

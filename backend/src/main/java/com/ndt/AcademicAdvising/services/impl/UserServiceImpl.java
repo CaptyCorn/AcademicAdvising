@@ -7,7 +7,6 @@ package com.ndt.AcademicAdvising.services.impl;
 import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
 import com.ndt.AcademicAdvising.dto.RequestUpdateUserDTO;
-import com.ndt.AcademicAdvising.dto.RequestUserLoginDTO;
 import com.ndt.AcademicAdvising.dto.RequestUserRegisterDTO;
 import com.ndt.AcademicAdvising.dto.ResponseProfileUserDTO;
 import com.ndt.AcademicAdvising.dto.ResponseUserDTO;
@@ -94,7 +93,6 @@ public class UserServiceImpl implements UserService {
         u.setPassword(passwordEncoder.encode(dto.getPassword()));
         u.setEmail(dto.getEmail());
         u.setStudentCode(dto.getStudentCode());
-        u.setPhone(dto.getPhone());
         u.setUserRole(UserRole.ROLE_STUDENT);
         return u;
     }
@@ -103,25 +101,25 @@ public class UserServiceImpl implements UserService {
     public ResponseUserDTO addUser(RequestUserRegisterDTO dto) {
         User u = mapToEntity(dto);
 
-        if (dto.getFile() != null && !dto.getFile().isEmpty()) {
-            try {
-                Map res = this.cloudinary.uploader().upload(
-                        dto.getFile().getBytes(),
-                        ObjectUtils.asMap(
-                                "folder", "Academic/ImageUser",
-                                "public_id", "user" + dto.getUsername(),
-                                "overwrite", true,
-                                "resource_type", "auto")
-                );
-                u.setAvatar(res.get("secure_url").toString());
-                u.setAvatarPublicId(res.get("public_id").toString());
-            } catch (IOException ex) {
-                System.getLogger(UserServiceImpl.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
-            }
-        }
-        else {
-            u.setAvatar(this.imageDefault);
-        }
+//        if (dto.getFile() != null && !dto.getFile().isEmpty()) {
+//            try {
+//                Map res = this.cloudinary.uploader().upload(
+//                        dto.getFile().getBytes(),
+//                        ObjectUtils.asMap(
+//                                "folder", "Academic/ImageUser",
+//                                "public_id", "user" + dto.getUsername(),
+//                                "overwrite", true,
+//                                "resource_type", "auto")
+//                );
+//                u.setAvatar(res.get("secure_url").toString());
+//                u.setAvatarPublicId(res.get("public_id").toString());
+//            } catch (IOException ex) {
+//                System.getLogger(UserServiceImpl.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+//            }
+//        }
+//        else {
+//            u.setAvatar(this.imageDefault);
+//        }
 
         return toDTO(this.userRepo.save(u));
     }

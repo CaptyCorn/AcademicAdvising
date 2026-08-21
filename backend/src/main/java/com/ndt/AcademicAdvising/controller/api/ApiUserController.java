@@ -13,7 +13,6 @@ import com.ndt.AcademicAdvising.services.UserService;
 import com.ndt.AcademicAdvising.utils.JwtUtils;
 import jakarta.validation.Valid;
 import java.security.Principal;
-import java.util.Collections;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,7 +22,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestAttribute;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -36,16 +34,16 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/ouacademic")
 public class ApiUserController {
-    
+
     @Autowired
     private UserService userService;
-    
+
     @Autowired
     private AuthService authService;
-    
+
     @Autowired
     private JwtUtils jwtUtils;
-    
+
     @PostMapping("/login")
     ResponseEntity<ResponseObjectDTO> login(@RequestBody RequestUserLoginDTO user) {
         if (this.authService.verify(user)) {
@@ -55,37 +53,61 @@ public class ApiUserController {
                         .status(HttpStatus.OK)
                         .body(
                                 new ResponseObjectDTO(
-                                        "Success", 
-                                        "Đăng nhập thành công", 
+                                        Boolean.TRUE,
+                                        200,
+                                        "Đăng nhập thành công",
                                         token)
                         );
             } catch (Exception ex) {
                 return ResponseEntity
-                        .status(HttpStatus.OK)
+                        .status(HttpStatus.INTERNAL_SERVER_ERROR)
                         .body(
                                 new ResponseObjectDTO(
-                                        "Fail", 
-                                        "Lỗi tạo JWT", 
+                                        Boolean.FALSE,
+                                        500,
+                                        "Lỗi tạo JWT",
                                         null)
                         );
             }
         }
         return ResponseEntity
-                        .status(HttpStatus.OK)
-                        .body(
-                                new ResponseObjectDTO(
-                                        "Fail", 
-                                        "Sai thông tin đăng nhập", 
-                                        null)
-                        );
+                .status(HttpStatus.UNAUTHORIZED)
+                .body(
+                        new ResponseObjectDTO(
+                                Boolean.FALSE,
+                                401,
+                                "Sai thông tin đăng nhập",
+                                null)
+                );
 
     }
-    
+
     @PostMapping("/register")
-    ResponseEntity<?> register(@Valid @ModelAttribute RequestUserRegisterDTO userDTO) {
-        return new ResponseEntity<>(this.userService.addUser(userDTO), HttpStatus.CREATED);
+    ResponseEntity<ResponseObjectDTO> register(@Valid @ModelAttribute RequestUserRegisterDTO userDTO) {
+        try {
+            return ResponseEntity
+                    .status(HttpStatus.CREATED)
+                    .body(
+                            new ResponseObjectDTO(
+                                    Boolean.TRUE,
+                                    201,
+                                    "Đăng ký thành công",
+                                    this.userService.addUser(userDTO))
+                    );
+        } catch (Exception e) {
+            
+            return ResponseEntity
+                    .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(
+                            new ResponseObjectDTO(
+                                    Boolean.FALSE,
+                                    500,
+                                    "Lỗi hệ thống",
+                                    null)
+                    );
+        }
     }
-    
+
     @GetMapping("/profile")
     @PreAuthorize("isAuthenticated()")
     ResponseEntity<ResponseObjectDTO> getProfile(Principal principal) {
@@ -93,26 +115,50 @@ public class ApiUserController {
             String username = principal.getName();
             return ResponseEntity
                     .status(HttpStatus.OK)
-                    .body(new ResponseObjectDTO(
-                            "OK", 
-                            "Get profile successfully", 
-                            this.userService.getProfile(username)
-                    ));
+                    .body(
+                            new ResponseObjectDTO(
+                                    Boolean.TRUE,
+                                    200,
+                                    "Lấy thông tin người dùng thành công",
+                                    this.userService.getProfile(username))
+                    );
         } catch (IllegalArgumentException i) {
             return ResponseEntity
-                    .status(HttpStatus.OK)
-                    .body(new ResponseObjectDTO(
-                            "Fail", 
-                            i.getMessage(), 
-                            null
-                    ));
+                    .status(HttpStatus.BAD_REQUEST)
+                    .body(
+                            new ResponseObjectDTO(
+                                    Boolean.FALSE,
+                                    401,
+                                    i.getMessage(),
+                                    null)
+                    );
         }
     }
-    
+
     @PutMapping("/profile")
     @PreAuthorize("isAuthenticated()")
-    ResponseEntity<?> update(@Valid @ModelAttribute RequestUpdateUserDTO userDTO, 
+    ResponseEntity<ResponseObjectDTO> update(@Valid @ModelAttribute RequestUpdateUserDTO userDTO,
             Principal principal) {
-        return new ResponseEntity<>(this.userService.updateUser(principal.getName(), userDTO), HttpStatus.OK);
+        try {
+            return ResponseEntity
+                    .status(HttpStatus.OK)
+                    .body(
+                            new ResponseObjectDTO(
+                                    Boolean.TRUE,
+                                    200,
+                                    "Cập nhập thông tin thành công",
+                                    this.userService.updateUser(principal.getName(), userDTO))
+                    );
+        } catch (Exception e) {
+            return ResponseEntity
+                    .status(HttpStatus.BAD_REQUEST)
+                    .body(
+                            new ResponseObjectDTO(
+                                    Boolean.FALSE,
+                                    400,
+                                    e.getMessage(),
+                                    null)
+                    );
+        }
     }
 }
