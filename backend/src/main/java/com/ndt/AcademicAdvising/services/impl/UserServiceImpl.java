@@ -100,6 +100,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public ResponseUserDTO addUser(RequestUserRegisterDTO dto) {
         User u = mapToEntity(dto);
+        u.setAvatar(this.imageDefault);
 
 //        if (dto.getFile() != null && !dto.getFile().isEmpty()) {
 //            try {
