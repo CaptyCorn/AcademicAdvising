@@ -2,16 +2,20 @@
 
 import { LoginAction } from "@/actions/auth.action";
 import { useActionState, useEffect } from "react";
-import { Button, Form } from "react-bootstrap";
+import { Alert, Button, Form } from "react-bootstrap";
 import styles from "./page.module.css";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
+import Link from "next/link";
 
 const LoginPage = () => {
     const router = useRouter();
     const [state, action, pending] = useActionState(
         LoginAction,
-        { success: false }
+        { 
+            success: false,
+            message: null
+        }
     );
 
     useEffect(() => {
@@ -56,6 +60,15 @@ const LoginPage = () => {
                         <p className="text-secondary mb-5">Truy cập hồ sơ và kế hoạch học tập của bạn.</p>
 
                         <Form action={action}>
+                            {state.message && (
+                                <Alert
+                                    variant={state.success ? "success" : "danger"}
+                                    className="mb-4 small"
+                                    role="alert"
+                                >
+                                    {state.message}
+                                </Alert>
+                            )}
                             <Form.Group className="mb-4" controlId="loginUsername">
                                 <Form.Label className="small fw-semibold">Tên đăng nhập</Form.Label>
                                 <Form.Control
@@ -94,6 +107,13 @@ const LoginPage = () => {
                                 {pending ? "Đang đăng nhập..." : "Đăng nhập"}
                                 {!pending && <span className="ms-2" aria-hidden="true">→</span>}
                             </Button>
+
+                            <p className="text-secondary text-center small mt-4 mb-0">
+                                Chưa có tài khoản?{" "}
+                                <Link href="/register" className={styles.registerLink}>
+                                    Đăng ký ngay
+                                </Link>
+                            </p>
                         </Form>
 
                         <p className="text-secondary text-center small mt-4 mb-0">Cần hỗ trợ? Liên hệ phòng công tác sinh viên.</p>

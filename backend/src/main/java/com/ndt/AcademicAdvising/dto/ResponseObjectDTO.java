@@ -17,7 +17,7 @@ import org.springframework.http.HttpStatus;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ResponseObjectDTO {
-    private Boolean status;
+    private Boolean success;
     private int statusCode;
     private String message;
     private Object data;

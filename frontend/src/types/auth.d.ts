@@ -4,7 +4,7 @@ interface IUserLogin {
     remember: boolean
 }
 
-interface IUserLogin {
+interface IUserRegister {
     firstName: string,
     lastName: string,
     email: string
