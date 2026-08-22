@@ -7,6 +7,7 @@ package com.ndt.AcademicAdvising.dto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.http.HttpStatus;
 
 /**
  *
@@ -16,7 +17,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ResponseObjectDTO {
-    private String status;
+    private Boolean status;
+    private int statusCode;
     private String message;
     private Object data;
 }

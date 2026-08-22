@@ -20,8 +20,9 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.Set;
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -31,7 +32,8 @@ import org.hibernate.annotations.UpdateTimestamp;
  */
 @Entity
 @Table(name = "tbl_user")
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 public class User implements Serializable{

@@ -18,4 +18,5 @@ import com.ndt.AcademicAdvising.repositories.custom.CustomSubjectRepository;
 @Repository
 public interface SubjectRepository extends JpaRepository<Subject, Integer>, CustomSubjectRepository{
     boolean existsByName(String name);
+    boolean existsByNameAndMajorId(String name, Integer majorId);
 }

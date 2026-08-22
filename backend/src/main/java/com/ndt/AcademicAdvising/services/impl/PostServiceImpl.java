@@ -98,7 +98,7 @@ public class PostServiceImpl implements PostService {
         User currentUser = getCurrentUser();
         
         if (Objects.equals(p.getUser().getId(), currentUser.getId())) {
-            this.postRepo.deleteById(postId);
+            this.postRepo.delete(p);
         } else {
             throw new IllegalArgumentException("Không thể xoá bài đăng của người khác.");
         }

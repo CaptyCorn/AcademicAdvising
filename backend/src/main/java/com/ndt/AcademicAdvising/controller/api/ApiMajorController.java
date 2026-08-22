@@ -27,27 +27,43 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("ouacademic")
 public class ApiMajorController {
-    
+
     @Autowired
     private MajorService majorService;
-    
+
     @GetMapping("/majors")
     ResponseEntity<ResponseObjectDTO> list(@RequestParam Map<String, String> params) {
         try {
             return ResponseEntity.status(HttpStatus.OK)
-                    .body(new ResponseObjectDTO(
-                            "OK", 
-                            "Get majors successfully", 
-                            this.majorService.getMajors(params)));
+                    .body(
+                            new ResponseObjectDTO(
+                                    Boolean.TRUE,
+                                    200,
+                                    "Lấy danh sách ngành học thành công",
+                                    this.majorService.getMajors(params)));
         } catch (IllegalArgumentException i) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body(new ResponseObjectDTO(
-                            "Fail", 
-                            i.getMessage(), 
-                            null));
+            return ResponseEntity
+                    .status(HttpStatus.BAD_REQUEST)
+                    .body(
+                            new ResponseObjectDTO(
+                                    Boolean.FALSE,
+                                    400,
+                                    i.getMessage(),
+                                    null)
+                    );
+        } catch (Exception e) {
+            return ResponseEntity
+                    .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(
+                            new ResponseObjectDTO(
+                                    Boolean.FALSE,
+                                    500,
+                                    "Lỗi hệ thống",
+                                    null)
+                    );
         }
     }
-    
+
     @PostMapping("/major")
     @PreAuthorize("hasRole('ADMIN')")
     ResponseEntity<ResponseObjectDTO> insert(@RequestBody Map<String, String> p) {
@@ -55,21 +71,36 @@ public class ApiMajorController {
         try {
             return ResponseEntity
                     .status(HttpStatus.CREATED)
-                    .body(new ResponseObjectDTO(
-                            "Success", 
-                            "Insert major successfully", 
-                            this.majorService.createMajor(name)));
-                    
+                    .body(
+                            new ResponseObjectDTO(
+                                    Boolean.TRUE,
+                                    201,
+                                    "Thêm ngành học thành công",
+                                    this.majorService.createMajor(name)));
+
         } catch (IllegalArgumentException i) {
             return ResponseEntity
                     .status(HttpStatus.BAD_REQUEST)
-                    .body(new ResponseObjectDTO(
-                            "Fail", 
-                            i.getMessage(), 
-                            null));
+                    .body(
+                            new ResponseObjectDTO(
+                                    Boolean.FALSE,
+                                    400,
+                                    i.getMessage(),
+                                    null)
+                    );
+        } catch (Exception e) {
+            return ResponseEntity
+                    .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(
+                            new ResponseObjectDTO(
+                                    Boolean.FALSE,
+                                    500,
+                                    "Lỗi hệ thống",
+                                    null)
+                    );
         }
     }
-    
+
     @DeleteMapping("/majors/{majorId}")
     @PreAuthorize("hasRole('ADMIN')")
     ResponseEntity<ResponseObjectDTO> delete(@PathVariable(name = "majorId") int majorId) {
@@ -77,18 +108,33 @@ public class ApiMajorController {
             this.majorService.deleteMajor(majorId);
             return ResponseEntity
                     .status(HttpStatus.OK)
-                    .body(new ResponseObjectDTO(
-                            "Success", 
-                            "Delete major successfully", 
-                            null));
-                    
+                    .body(
+                            new ResponseObjectDTO(
+                                    Boolean.TRUE,
+                                    200,
+                                    "Xoá ngành học thành công",
+                                    null));
+
         } catch (IllegalArgumentException i) {
             return ResponseEntity
                     .status(HttpStatus.BAD_REQUEST)
-                    .body(new ResponseObjectDTO(
-                            "Fail", 
-                            i.getMessage(), 
-                            null));
+                    .body(
+                            new ResponseObjectDTO(
+                                    Boolean.FALSE,
+                                    400,
+                                    i.getMessage(),
+                                    null)
+                    );
+        } catch (Exception e) {
+            return ResponseEntity
+                    .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(
+                            new ResponseObjectDTO(
+                                    Boolean.FALSE,
+                                    500,
+                                    "Lỗi hệ thống",
+                                    null)
+                    );
         }
     }
 }

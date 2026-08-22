@@ -33,43 +33,106 @@ public class ApiPostController {
 
     @Autowired
     private PostService postService;
-    
+
     @Autowired
     private AIPostAsyncService postAsyncService;
-    
+
     @GetMapping("/posts")
     ResponseEntity<ResponseObjectDTO> getAllPost() {
+
         Page<ResponsePostDTO> data = this.postService.getListPost();
         if (!data.getContent().isEmpty()) {
-            return ResponseEntity.status(HttpStatus.OK).body(new ResponseObjectDTO("OK", "Query success", data));
+            return ResponseEntity
+                    .status(HttpStatus.OK)
+                    .body(
+                            new ResponseObjectDTO(
+                                    Boolean.TRUE,
+                                    200,
+                                    "Lấy danh sách bài đăng thành công",
+                                    data)
+                    );
         }
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ResponseObjectDTO("Not data", "Have not data", ""));
+        return ResponseEntity
+                .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body(
+                        new ResponseObjectDTO(
+                                Boolean.FALSE,
+                                500,
+                                "Lỗi hệ thống",
+                                null)
+                );
+
     }
 
     @PostMapping("/post")
     ResponseEntity<ResponseObjectDTO> insertPost(@RequestBody Map<String, String> p) {
         try {
             ResponsePostDTO postDTO = this.postService.addPost(p.get("content"));
-            
+
             this.postAsyncService.processPost(postDTO.getId());
-            
+
             return ResponseEntity.status(HttpStatus.CREATED)
-                    .body(new ResponseObjectDTO("CREATED", "Insert success", postDTO));
+                    .body(
+                            new ResponseObjectDTO(
+                                    Boolean.TRUE,
+                                    201,
+                                    "Tạo bài đăng thành công",
+                                    postDTO)
+                    );
         } catch (IllegalArgumentException i) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body(new ResponseObjectDTO("Fail", i.getMessage(), null));
+                    .body(
+                            new ResponseObjectDTO(
+                                    Boolean.FALSE,
+                                    400,
+                                    i.getMessage(),
+                                    null)
+                    );
+        } catch (Exception e) {
+            return ResponseEntity
+                    .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(
+                            new ResponseObjectDTO(
+                                    Boolean.FALSE,
+                                    500,
+                                    "Lỗi hệ thống",
+                                    null)
+                    );
         }
     }
-    
+
     @PutMapping("/posts/{postId}")
-    ResponseEntity<ResponseObjectDTO> updatePost(@PathVariable(value = "postId") int postId, 
-                                                @RequestBody RequestPostDTO p) {
+    ResponseEntity<ResponseObjectDTO> updatePost(@PathVariable(value = "postId") int postId,
+            @RequestBody RequestPostDTO p) {
         try {
-            return ResponseEntity.status(HttpStatus.OK)
-                    .body(new ResponseObjectDTO("Success", "Cập nhật bài đăng thành công.", this.postService.updatePost(postId, p.getContent())));
+            return ResponseEntity
+                    .status(HttpStatus.OK)
+                    .body(
+                            new ResponseObjectDTO(
+                                    Boolean.TRUE,
+                                    200,
+                                    "Cập nhật bài đăng thành công.",
+                                    this.postService.updatePost(postId, p.getContent()))
+                    );
         } catch (IllegalArgumentException i) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST )
-                    .body(new ResponseObjectDTO("Fail", i.getMessage(), null));
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(
+                            new ResponseObjectDTO(
+                                    Boolean.FALSE,
+                                    400,
+                                    i.getMessage(),
+                                    null)
+                    );
+        } catch (Exception e) {
+            return ResponseEntity
+                    .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(
+                            new ResponseObjectDTO(
+                                    Boolean.FALSE,
+                                    500,
+                                    "Lỗi hệ thống",
+                                    null)
+                    );
         }
     }
 
@@ -78,18 +141,56 @@ public class ApiPostController {
         try {
             this.postService.deletePost(postId);
             return ResponseEntity.status(HttpStatus.OK)
-                    .body(new ResponseObjectDTO("Success", "Delete post successfully", ""));
+                    .body(
+                            new ResponseObjectDTO(
+                                    Boolean.TRUE,
+                                    200,
+                                    "Xoá bài đăng thành công",
+                                    null)
+                    );
         } catch (IllegalArgumentException i) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new ResponseObjectDTO("Fail", i.getMessage(), ""));
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(
+                            new ResponseObjectDTO(
+                                    Boolean.FALSE,
+                                    400,
+                                    i.getMessage(),
+                                    null)
+                    );
+        } catch (Exception e) {
+            System.out.println("Lỗi: " + e);
+            return ResponseEntity
+                    .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(
+                            new ResponseObjectDTO(
+                                    Boolean.FALSE,
+                                    500,
+                                    "Lỗi hệ thống",
+                                    null)
+                    );
         }
     }
 
     @GetMapping("/posts/me")
     ResponseEntity<ResponseObjectDTO> getAllPostUser() {
+
         Page<ResponsePostDTO> data = this.postService.getListPostUser();
         if (!data.getContent().isEmpty()) {
-            return ResponseEntity.status(HttpStatus.OK).body(new ResponseObjectDTO("OK", "Query success", data));
+            return ResponseEntity
+                    .status(HttpStatus.OK)
+                    .body(new ResponseObjectDTO(
+                            Boolean.TRUE,
+                            200,
+                            "Lấy danh sách bài đăng của bạn thành công",
+                            data));
         }
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ResponseObjectDTO("Not data", "Have not data", ""));
+        return ResponseEntity
+                .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body(new ResponseObjectDTO(
+                        Boolean.FALSE,
+                        500,
+                        "Lỗi hệ thống",
+                        null)
+                );
     }
 }
