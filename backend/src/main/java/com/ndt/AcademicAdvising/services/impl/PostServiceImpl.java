@@ -4,6 +4,7 @@
  */
 package com.ndt.AcademicAdvising.services.impl;
 
+import com.ndt.AcademicAdvising.dto.PageResponseDTO;
 import com.ndt.AcademicAdvising.dto.ResponsePostDTO;
 import com.ndt.AcademicAdvising.dto.ResponseUserDTO;
 import com.ndt.AcademicAdvising.pojo.Post;
@@ -11,6 +12,7 @@ import com.ndt.AcademicAdvising.pojo.User;
 import com.ndt.AcademicAdvising.repositories.PostRepository;
 import com.ndt.AcademicAdvising.repositories.UserRepository;
 import com.ndt.AcademicAdvising.services.PostService;
+import java.util.Map;
 import java.util.Objects;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -45,6 +47,16 @@ public class PostServiceImpl implements PostService {
                                         post.getUser().getStudentCode()));
         return dto;
     }
+    
+    private PageResponseDTO<ResponsePostDTO> toPageDTO(Page<ResponsePostDTO> pageResponse) {
+        PageResponseDTO<ResponsePostDTO> dto = new PageResponseDTO<>();
+        dto.setContent(pageResponse.getContent());
+        dto.setPage(pageResponse.getNumber());
+        dto.setSize(pageResponse.getSize());
+        dto.setTotalElements(pageResponse.getTotalElements());
+        dto.setTotalPages(pageResponse.getTotalPages());
+        return dto;
+    }
 
     private User getCurrentUser() {
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
@@ -52,9 +64,8 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public Page<ResponsePostDTO> getListPost() {
-        Pageable pageable = PageRequest.of(0, 15, Sort.by(Sort.Direction.DESC, "createdAt"));
-        return this.postRepo.findAllPostBy(pageable).map(this::toDTO);
+    public PageResponseDTO<ResponsePostDTO> getListPost(Map<String, String> params) {
+        return toPageDTO(this.postRepo.getListPost(params));
     }
 
     @Override

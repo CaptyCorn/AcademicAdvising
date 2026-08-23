@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
@@ -38,10 +39,8 @@ public class ApiPostController {
     private AIPostAsyncService postAsyncService;
 
     @GetMapping("/posts")
-    ResponseEntity<ResponseObjectDTO> getAllPost() {
-
-        Page<ResponsePostDTO> data = this.postService.getListPost();
-        if (!data.getContent().isEmpty()) {
+    ResponseEntity<ResponseObjectDTO> getAllPost(@RequestParam Map<String, String> params) {
+        try {
             return ResponseEntity
                     .status(HttpStatus.OK)
                     .body(
@@ -49,10 +48,11 @@ public class ApiPostController {
                                     Boolean.TRUE,
                                     200,
                                     "Lấy danh sách bài đăng thành công",
-                                    data)
+                                    this.postService.getListPost(params))
                     );
-        }
-        return ResponseEntity
+        } catch (Exception e) {
+            System.out.println("Lỗi lấy danh sách post: " + e.getMessage());
+            return ResponseEntity
                 .status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .body(
                         new ResponseObjectDTO(
@@ -61,7 +61,7 @@ public class ApiPostController {
                                 "Lỗi hệ thống",
                                 null)
                 );
-
+        }
     }
 
     @PostMapping("/post")
