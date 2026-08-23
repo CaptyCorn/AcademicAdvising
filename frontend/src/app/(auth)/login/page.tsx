@@ -12,7 +12,7 @@ const LoginPage = () => {
     const router = useRouter();
     const [state, action, pending] = useActionState(
         LoginAction,
-        { 
+        {
             success: false,
             message: null
         }
@@ -38,7 +38,7 @@ const LoginPage = () => {
                     <p className="text-uppercase fw-bold small mt-4 mb-3">Academic Advising</p>
                     <h1 className="display-4 fw-normal">Đồng hành cùng hành trình học tập.</h1>
                     <p className="lead mt-3 mb-0">
-                    Không gian tập trung cho sinh viên, cố vấn và những quyết định học tập sáng suốt.
+                        Không gian tập trung cho sinh viên, cố vấn và những quyết định học tập sáng suốt.
                     </p>
                     <hr className="w-25 my-5" />
                     <p className="small mb-0">Hệ thống tư vấn học vụ</p>

@@ -109,7 +109,7 @@ public class CommentServiceImpl implements CommentService{
         Comment c = new Comment();
         c.setContent(content);
         c.setPost(this.postRepo.findById(postId).orElseThrow(() -> new IllegalArgumentException("Bài đăng không tồn tại")));
-        c.setUser(this.userRepo.findByUsername("ai_agent"));  
+        c.setUser(this.userRepo.findByUsername("aiagent"));  
         this.commentRepo.save(c);
     }
 

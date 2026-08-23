@@ -1,11 +1,10 @@
-import Header from "@/components/Header";
-import { AuthProvider } from "../_context/AuthContext";
+import SideBar from "../_components/SideBar";
 
 export default function MainPageLayout({ children }: LayoutProps<"/">) {
   return (
-    <AuthProvider>
-      <Header />
-      {children}
-    </AuthProvider>
+      <div className="d-flex min-vh-100 bg-light">
+        <SideBar />
+        <main className="flex-grow-1">{children}</main>
+      </div>
   );
 }

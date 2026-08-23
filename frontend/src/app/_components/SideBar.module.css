@@ -1,0 +1,120 @@
+.sidebar {
+  --width: 280px;
+  position: sticky;
+  top: 0;
+  width: var(--width);
+  flex: 0 0 var(--width);
+  overflow: visible;
+  transition: width 180ms ease, flex-basis 180ms ease;
+}
+
+.logoWrap {
+  width: 42px;
+  height: 42px;
+}
+
+.logoWrap img {
+  object-fit: contain;
+}
+
+.navItem:hover {
+  font-weight: 600;
+}
+
+.icon {
+  width: 22px;
+  height: 22px;
+  flex: 0 0 22px;
+  fill: none;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 1.8;
+}
+
+.moreButton {
+  width: 100%;
+}
+
+.moreMenu {
+  position: absolute;
+  left: calc(100% - 12px);
+  bottom: 64px;
+  width: 220px;
+  z-index: 30;
+}
+
+.userInfo {
+  min-width: 0;
+}
+
+.userInfo strong,
+.userInfo span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.userInfo strong {
+  font-size: 0.82rem;
+}
+
+.userInfo span {
+  color: #777;
+  font-size: 0.72rem;
+}
+
+.avatar {
+  flex: 0 0 auto;
+  border: 2px solid #ddd;
+  object-fit: cover;
+}
+
+.collapsed {
+  --width: 76px;
+}
+
+.collapsed .brandText,
+.collapsed .navLabel,
+.collapsed .sectionLabel,
+.collapsed .userInfo,
+.collapsed .moreLabel {
+  display: none;
+}
+
+.collapsed > a {
+  justify-content: center;
+  padding-right: 0 !important;
+  padding-left: 0 !important;
+}
+
+.collapsed nav a,
+.collapsed > div:last-of-type,
+.collapsed > button {
+  justify-content: center;
+}
+
+.collapsed nav a {
+  padding-right: 0 !important;
+  padding-left: 0 !important;
+}
+
+.collapsed .moreButton {
+  padding-right: 0 !important;
+  padding-left: 0 !important;
+}
+
+@media (max-width: 767.98px) {
+  .sidebar {
+    position: relative;
+    width: 100%;
+    height: auto;
+    min-height: 72px;
+  }
+
+  .sidebar nav,
+  .sidebar > div:last-of-type,
+  .sidebar > button {
+    display: none !important;
+  }
+}
