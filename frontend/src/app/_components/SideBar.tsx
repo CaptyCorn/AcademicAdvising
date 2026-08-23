@@ -68,7 +68,7 @@ const SideBar = () => {
 
 	return (
 		<aside className={`d-flex flex-column flex-shrink-0 min-vh-100 p-3 bg-white border-end ${styles.sidebar} ${isCollapsed ? styles.collapsed : ""}`}>
-			<Link href="/" className="d-flex align-items-center gap-2 px-2 mb-3 text-dark text-decoration-none">
+			<Link href="/" onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })} className="d-flex align-items-center gap-2 px-2 mb-3 text-dark text-decoration-none">
 				<span className={`d-flex align-items-center justify-content-center overflow-hidden rounded-circle ${styles.logoWrap}`}>
 					<Image src="/Logo_DH_Mở_TPHCM.png" alt="" width={42} height={42} priority />
 				</span>

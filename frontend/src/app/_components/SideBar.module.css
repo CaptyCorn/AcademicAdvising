@@ -1,7 +1,9 @@
 .sidebar {
   --width: 280px;
-  position: sticky;
+  position: fixed;
   top: 0;
+  left: 0;
+  z-index: 20;
   width: var(--width);
   flex: 0 0 var(--width);
   overflow: visible;
@@ -104,17 +106,8 @@
   padding-left: 0 !important;
 }
 
-@media (max-width: 767.98px) {
+@media (max-width: 991.98px) {
   .sidebar {
-    position: relative;
-    width: 100%;
-    height: auto;
-    min-height: 72px;
-  }
-
-  .sidebar nav,
-  .sidebar > div:last-of-type,
-  .sidebar > button {
-    display: none !important;
+    --width: 76px;
   }
 }
