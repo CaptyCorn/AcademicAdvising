@@ -3,6 +3,7 @@ export const endpoints = {
     'register': '/register',
     'profile': '/profile',
     'posts': '/posts',
+    'createPost': '/post'
 }
 
 export const callAPI = (endpoint: string) => {

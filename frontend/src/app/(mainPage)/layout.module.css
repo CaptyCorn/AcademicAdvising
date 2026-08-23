@@ -1,0 +1,10 @@
+.shell > main {
+  min-width: 0;
+  margin-left: 280px;
+}
+
+@media (max-width: 991.98px) {
+  .shell > main {
+    margin-left: 76px;
+  }
+}

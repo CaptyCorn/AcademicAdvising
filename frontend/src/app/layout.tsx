@@ -1,6 +1,7 @@
 import "bootstrap/dist/css/bootstrap.min.css";
 import { Be_Vietnam_Pro } from "next/font/google";
 import { AuthProvider } from "./_context/AuthContext";
+import { Bounce, ToastContainer } from "react-toastify";
 
 const beVietnamPro = Be_Vietnam_Pro({
 	variable: "--font-be-vietnam-pro",
@@ -15,6 +16,19 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
 				<AuthProvider>
 					{children}
 				</AuthProvider>
+				<ToastContainer 
+					position="bottom-right"
+					autoClose={5000}
+					hideProgressBar={false}
+					newestOnTop={false}
+					closeOnClick={false}
+					rtl={false}
+					pauseOnFocusLoss
+					draggable
+					pauseOnHover
+					theme="light"
+					transition={Bounce}
+				/>
 			</body>
 		</html>
 	);

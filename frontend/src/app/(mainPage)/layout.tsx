@@ -1,10 +1,11 @@
 import SideBar from "../_components/SideBar";
+import styles from "./layout.module.css";
 
 export default function MainPageLayout({ children }: LayoutProps<"/">) {
   return (
-      <div className="d-flex min-vh-100 bg-light">
+      <div className={`min-vh-100 bg-light ${styles.shell}`}>
         <SideBar />
-        <main className="flex-grow-1">{children}</main>
+        <main>{children}</main>
       </div>
   );
 }

@@ -1,0 +1,46 @@
+.avatar {
+  border: 2px solid #e1e7e8;
+  object-fit: cover;
+}
+
+.composer {
+  background: #eef1f2;
+  color: #737f84;
+  font-size: 0.95rem;
+}
+
+.composer:hover,
+.composer:focus {
+  background: #e4eaeb;
+  color: #52636a;
+  outline: 0;
+}
+
+.moreButton::after {
+  display: none;
+}
+
+.commentButton:hover {
+  color: #087f82 !important;
+}
+
+.commentIcon {
+  display: inline-block;
+  width: 18px;
+  height: 16px;
+  border: 1.7px solid currentColor;
+  border-radius: 50%;
+}
+
+.commentIcon::after {
+  display: block;
+  width: 5px;
+  height: 5px;
+  margin: 10px 0 0 1px;
+  border-bottom: 1.7px solid currentColor;
+  border-left: 1.7px solid currentColor;
+  background: #fff;
+  content: "";
+  transform: skew(-25deg);
+}
+
