@@ -53,21 +53,23 @@ const PostCommunity = (props: Iprops) => {
     }, [loadMore, loading, page, totalPages]);
 
     return(
-        <div className="container py-4" style={{ maxWidth: 700 }}>
+        <div className="container py-4">
+            <div className="row">
+                <div className="col-12 col-xl-7 mx-auto">
             <div className="d-flex align-items-center gap-3 p-3 mb-4 bg-white border rounded-4 shadow-sm">
-                <Image src={user?.avatar || "/file.svg"} alt="Ảnh đại diện" width={46} height={46} roundedCircle className={styles.avatar} />
-                <button type="button" className={`flex-grow-1 border-0 text-start rounded-pill px-4 py-3 ${styles.composer}`} onClick={openCreatePost}>
+                <Image src={user?.avatar || "/file.svg"} alt="Ảnh đại diện" width={46} height={46} roundedCircle className="flex-shrink-0" />
+                <button type="button" className="flex-grow-1 border-0 bg-light text-start text-secondary rounded-pill px-4 py-3" onClick={openCreatePost}>
                     {user?.firstName || user?.lastName ? `${user.firstName} ${user.lastName}` : user?.username || "Bạn"}, bạn đang thắc mắc gì thế?
                 </button>
                 <Button variant="primary" className="rounded-pill px-4" onClick={openCreatePost}>Đăng</Button>
             </div>
 
-            <div className="d-flex flex-column gap-3">
-                {posts.map((post) => (
-                    <Card key={post.id} className="border-0 rounded-0 border-bottom bg-white">
-                        <Card.Body className="p-4">
+            <div className="d-flex flex-column overflow-hidden rounded-4 shadow-sm">
+                {posts.map((post, index) => (
+                    <Card key={post.id} className={`border-0 rounded-0 bg-white ${index < posts.length - 1 ? "border-bottom" : ""}`}>
+                        <Card.Body className="p-3 p-md-4">
                             <div className="d-flex align-items-start gap-3">
-                                <Image src={post.user.avatar || "/file.svg"} alt="Ảnh đại diện" width={42} height={42} roundedCircle className={styles.avatar} />
+                                <Image src={post.user.avatar || "/file.svg"} alt="Ảnh đại diện" width={42} height={42} roundedCircle className="flex-shrink-0" />
                                 <div>
                                     <div className="d-flex align-items-center gap-2">
                                         <span className="fw-semibold">{post.user.name || post.user.username}</span>
@@ -77,7 +79,7 @@ const PostCommunity = (props: Iprops) => {
                                 </div>
                                 <Dropdown align="end" className="ms-auto">
                                     <Dropdown.Toggle variant="link" className={`p-0 border-0 text-secondary ${styles.moreButton}`} aria-label="Tùy chọn bài đăng">
-                                        <span aria-hidden="true">•••</span>
+                                        <i className="bi bi-three-dots-vertical" aria-hidden="true" />
                                     </Dropdown.Toggle>
                                     <Dropdown.Menu>
                                         <Dropdown.Item onClick={() => console.log("Báo cáo bài đăng", post.id)}>Báo cáo</Dropdown.Item>
@@ -86,8 +88,8 @@ const PostCommunity = (props: Iprops) => {
                                 </Dropdown>
                             </div>
                             <Card.Text className="mb-3 mt-3 text-break">{post.content}</Card.Text>
-                            <Link href={`/posts/${post.id}`} type="button" className={`btn btn-link d-inline-flex align-items-center gap-2 p-0 text-secondary text-decoration-none ${styles.commentButton}`}>
-                                <span className={styles.commentIcon} aria-hidden="true" />
+                            <Link href={`/posts/${post.id}`} type="button" className="btn btn-link d-inline-flex align-items-center gap-2 p-0 text-secondary text-decoration-none">
+                                <i className="bi bi-chat" aria-hidden="true" />
                                 <span>{post.commentCount ?? 0}</span>
                             </Link>
                         </Card.Body>
@@ -101,6 +103,8 @@ const PostCommunity = (props: Iprops) => {
             </div>
 
             <PostModelCreate showModalCreate={showCreatePost} setShowModalCreate={(value) => value ? openCreatePost() : closeCreatePost()} />
+                </div>
+            </div>
         </div>
     );
 }

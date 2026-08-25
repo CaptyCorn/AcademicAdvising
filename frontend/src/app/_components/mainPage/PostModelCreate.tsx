@@ -45,33 +45,38 @@ const PostModelCreate = (props: IProps) => {
 
     return (
         <Modal show={showModalCreate} onHide={handlecloseModal} centered>
-            <Modal.Header closeButton className="border-0 pb-2">
-                <Modal.Title className="fs-5 fw-semibold">Tạo bài đăng mới</Modal.Title>
+            <Modal.Header closeButton className="border-0 px-4 pt-4 pb-2">
+                <Modal.Title className="d-flex align-items-center gap-2 fs-5 fw-bold">
+                    <i className="bi bi-pencil-square text-primary" aria-hidden="true" />
+                    Tạo bài đăng mới
+                </Modal.Title>
             </Modal.Header>
-            <Modal.Body className="pt-2">
-                <div className="d-flex gap-3">
-                    <Image src={user?.avatar || "/file.svg"} alt="Ảnh đại diện" width={44} height={44} roundedCircle />
+            <Modal.Body className="px-4 py-3">
+                <div className="d-flex align-items-start gap-3">
+                    <Image src={user?.avatar || "/file.svg"} alt="Ảnh đại diện" width={44} height={44} roundedCircle className="flex-shrink-0" />
                     <div className="flex-grow-1">
-                        <div className="fw-semibold mb-3">{user?.firstName || user?.lastName ? `${user.firstName} ${user.lastName}` : user?.username || "Tài khoản"}</div>
+                        <div className="fw-semibold text-dark">{user?.firstName || user?.lastName ? `${user.firstName} ${user.lastName}` : user?.username || "Tài khoản"}</div>
+                        <small className="text-secondary">Chia sẻ với cộng đồng</small>
                         <Form.Control
                             as="textarea"
                             rows={5}
                             value={content}
                             maxLength={500}
                             placeholder="Bạn đang thắc mắc gì thế?"
-                            className="border-0 bg-light rounded-3 p-3"
+                            className="border bg-light rounded-3 shadow-none p-3 mt-3"
                             onChange={(e) => setContent(e.target.value)}
                             autoFocus
                         />
-                        <div className="text-end mt-3">
+                        <div className="text-end mt-2">
                             <small className="text-secondary">{content.length}/500</small>
                         </div>
                     </div>
                 </div>
             </Modal.Body>
-            <Modal.Footer className="border-0 pt-0">
-                <Button variant="light" onClick={handlecloseModal}>Huỷ</Button>
-                <Button variant="primary" onClick={handlePost} disabled={isPending || !content.trim()}>
+            <Modal.Footer className="border-0 px-4 pb-4 pt-0">
+                <Button variant="light" className="rounded-pill px-4" onClick={handlecloseModal}>Huỷ</Button>
+                <Button variant="primary" className="rounded-pill px-4" onClick={handlePost} disabled={isPending || !content.trim()}>
+                    <i className="bi bi-send me-2" aria-hidden="true" />
                     {isPending ? 'Đang đăng...' : 'Đăng bài'}
                 </Button>
             </Modal.Footer>

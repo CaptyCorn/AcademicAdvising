@@ -1,7 +1,6 @@
 'use client'
 
 import Link from "next/link";
-import { searchPosts } from "@/actions/post.action";
 import moment from "moment";
 import "../../../../../node_modules/moment/locale/vi";
 import { useEffect, useRef, useState } from "react";
@@ -14,10 +13,15 @@ interface IProps {
     totalElements: number,
     page: number,
     totalPages: number,
+    loadMore: (page: number) => Promise<{
+        content: IPosts[];
+        page: number;
+        totalPages: number;
+    }>
 }
 
 const SearchPage = (props: IProps) => {
-    const { keyword, posts: initialPosts, totalElements, page: initialPage, totalPages } = props;
+    const { keyword, posts: initialPosts, totalElements, page: initialPage, totalPages, loadMore } = props;
     const [posts, setPosts] = useState(initialPosts);
     const [page, setPage] = useState(initialPage);
     const [loading, setLoading] = useState(false);
@@ -32,7 +36,7 @@ const SearchPage = (props: IProps) => {
 
             setLoading(true);
             try {
-                const nextPage = await searchPosts(keyword, page + 1);
+                const nextPage = await loadMore(page + 1);
                 setPosts((currentPosts) => [...currentPosts, ...nextPage.content]);
                 setPage(nextPage.page);
             } catch {
@@ -44,7 +48,7 @@ const SearchPage = (props: IProps) => {
 
         observer.observe(target);
         return () => observer.disconnect();
-    }, [keyword, loading, page, totalPages]);
+    }, [keyword, loadMore, loading, page, totalPages]);
 
     return (
         <main className="container py-4 py-md-5">
