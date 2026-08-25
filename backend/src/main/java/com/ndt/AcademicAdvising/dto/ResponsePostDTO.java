@@ -21,4 +21,5 @@ public class ResponsePostDTO {
     private String content;
     private Date createdAt;
     private ResponseUserDTO user;
+    private Long commentCount;
 }

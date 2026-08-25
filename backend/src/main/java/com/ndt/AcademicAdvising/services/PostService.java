@@ -4,7 +4,9 @@
  */
 package com.ndt.AcademicAdvising.services;
 
+import com.ndt.AcademicAdvising.dto.PageResponseDTO;
 import com.ndt.AcademicAdvising.dto.ResponsePostDTO;
+import java.util.Map;
 import org.springframework.data.domain.Page;
 
 /**
@@ -12,9 +14,11 @@ import org.springframework.data.domain.Page;
  * @author ngodo
  */
 public interface PostService {
-    Page<ResponsePostDTO> getListPost();
+    PageResponseDTO<ResponsePostDTO> getListPost(Map<String, String> params);
     ResponsePostDTO addPost(String content);
     void deletePost(int postId);
     ResponsePostDTO updatePost(int postId, String content);
     public Page<ResponsePostDTO> getListPostUser();
+    ResponsePostDTO getPostDetail(int postId);
+    
 }

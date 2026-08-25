@@ -1,10 +1,11 @@
 'use client'
 import { RegisterAction } from "@/actions/auth.action";
-import { useActionState } from "react";
+import { useActionState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { Button, Form } from "react-bootstrap";
 import styles from "./page.module.css";
+import { useRouter } from "next/navigation";
 
 const userInfo = [{
     field: "firstName",
@@ -19,6 +20,10 @@ const userInfo = [{
     label: "Email",
     type: "email"
 }, {
+    field: "studentCode",
+    label: "Mã số sinh viên",
+    type: "number"
+}, {
     field: "username",
     label: "Tên đăng nhập",
     type: "text"
@@ -30,13 +35,21 @@ const userInfo = [{
     field: "confirm",
     label: "Xác nhận mật khẩu",
     type: "password"
-}];
+}] as const;
 
 const RegisterPage = () => {
-    const [, action, pending] = useActionState(
+    const router = useRouter();
+    const [state, action, pending] = useActionState(
         RegisterAction,
-        { success: false }
+        { errors: {}, values: {} }
     );
+
+    useEffect(() => {
+        if (!state.success) return;
+
+        const redirectTimer = window.setTimeout(() => router.push("/login"), 900);
+        return () => window.clearTimeout(redirectTimer);
+    }, [router, state.success]);
 
     return (
         <main className="container-fluid min-vh-100 p-0">
@@ -84,6 +97,15 @@ const RegisterPage = () => {
                         </div>
 
                         <Form action={action} className="mt-4">
+                            {state.message && (
+                                <div
+                                    className={`alert ${state.success ? "alert-success" : "alert-danger"} small`}
+                                    role="alert"
+                                >
+                                    {state.message}
+                                </div>
+                            )}
+
                             <div className="row g-3">
                                 {userInfo.map((u) => (
                                     <Form.Group
@@ -96,10 +118,16 @@ const RegisterPage = () => {
                                             className="py-3"
                                             type={u.type}
                                             name={u.field}
+                                            defaultValue={state?.values?.[u.field]}
                                             placeholder={`Nhập ${u.label.toLowerCase()}`}
                                             autoComplete={u.field === "password" || u.field === "confirm" ? "new-password" : u.field}
                                             required
                                         />
+                                        {state?.errors?.[u.field]?.map((error) => (
+                                            <Form.Text key={error} className="d-block text-danger mt-1">
+                                                {error}
+                                            </Form.Text>
+                                        ))}
                                     </Form.Group>
                                 ))}
                             </div>

@@ -21,5 +21,6 @@ public class ResponseCommentDTO {
     private String content;
     private Date createdAt;
     private String nameUserComment;
+    private String avatarUserComment;
     private int postId;
 }

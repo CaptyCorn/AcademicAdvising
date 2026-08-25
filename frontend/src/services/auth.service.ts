@@ -11,8 +11,8 @@ export const requestLogin = async (loginForm: {
         },
         body: JSON.stringify(loginForm)
     });
-    const data = await res.json();
-    return data;
+    const responseInfo = await res.json();
+    return responseInfo;
 }
 
 export const requestRegister = async (formData: FormData) => {
@@ -21,8 +21,8 @@ export const requestRegister = async (formData: FormData) => {
         body: formData
     })
     if (res.status == 201) {
-        const data = await res.json();
-        return data;
+        const responseInfo = await res.json();
+        return responseInfo;
     }
 }
 

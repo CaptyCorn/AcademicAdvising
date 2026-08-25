@@ -4,21 +4,18 @@
  */
 package com.ndt.AcademicAdvising.dto;
 
-import lombok.AllArgsConstructor;
+import java.util.List;
 import lombok.Data;
-import lombok.NoArgsConstructor;
-import org.springframework.http.HttpStatus;
 
 /**
  *
  * @author ngodo
  */
 @Data
-@AllArgsConstructor
-@NoArgsConstructor
-public class ResponseObjectDTO {
-    private Boolean success;
-    private int statusCode;
-    private String message;
-    private Object data;
+public class PageResponseDTO<T> {
+    private List<T> content;
+    private int page;
+    private int size;
+    private long totalElements;
+    private int totalPages;
 }

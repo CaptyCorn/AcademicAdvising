@@ -1,11 +1,14 @@
-import Header from "@/components/Header";
-import { AuthProvider } from "../_context/AuthContext";
+import SideBar from "../_components/SideBar";
+import { PostCreateProvider } from "../_context/PostCreateContext";
+import styles from "./layout.module.css";
 
 export default function MainPageLayout({ children }: LayoutProps<"/">) {
   return (
-    <AuthProvider>
-      <Header />
-      {children}
-    </AuthProvider>
+      <PostCreateProvider>
+        <div className={`min-vh-100 bg-light ${styles.shell}`}>
+          <SideBar />
+          <main>{children}</main>
+        </div>
+      </PostCreateProvider>
   );
 }

@@ -1,0 +1,4 @@
+.moreButton::after {
+  display: none;
+}
+

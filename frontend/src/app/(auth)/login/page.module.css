@@ -57,3 +57,13 @@
   color: #056466;
 }
 
+.registerLink {
+  color: #087f82;
+  font-weight: 600;
+}
+
+.registerLink:hover {
+  color: #056466;
+  text-decoration: underline !important;
+}
+
