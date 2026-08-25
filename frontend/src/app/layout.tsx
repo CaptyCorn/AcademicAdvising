@@ -1,4 +1,5 @@
 import "bootstrap/dist/css/bootstrap.min.css";
+import "bootstrap-icons/font/bootstrap-icons.css";
 import { Be_Vietnam_Pro } from "next/font/google";
 import { AuthProvider } from "./_context/AuthContext";
 import { Bounce, ToastContainer } from "react-toastify";
