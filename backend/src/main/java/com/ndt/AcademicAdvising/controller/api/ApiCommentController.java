@@ -7,6 +7,7 @@ package com.ndt.AcademicAdvising.controller.api;
 import com.ndt.AcademicAdvising.dto.RequestCommentDTO;
 import com.ndt.AcademicAdvising.dto.ResponseObjectDTO;
 import com.ndt.AcademicAdvising.services.CommentService;
+import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
@@ -31,7 +33,9 @@ public class ApiCommentController {
     private CommentService commentService;
 
     @GetMapping("/posts/{postId}/comments")
-    ResponseEntity<ResponseObjectDTO> list(@PathVariable(value = "postId") int postId) {
+    ResponseEntity<ResponseObjectDTO> list(
+            @PathVariable(value = "postId") int postId, 
+            @RequestParam Map<String, String> params) {
         try {
             return ResponseEntity
                     .status(HttpStatus.OK)
@@ -40,9 +44,10 @@ public class ApiCommentController {
                                     Boolean.TRUE,
                                     200,
                                     "Lấy danh sách comment thành công",
-                                    this.commentService.getComments(postId)
+                                    this.commentService.getComments(params, postId)
                             ));
         } catch (Exception e) {
+            System.out.println("Lỗi lấy danh sách bình luận: " + e.getMessage());
             return ResponseEntity
                     .status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(

@@ -4,9 +4,10 @@
  */
 package com.ndt.AcademicAdvising.services;
 
+import com.ndt.AcademicAdvising.dto.PageResponseDTO;
 import com.ndt.AcademicAdvising.dto.ResponseCommentDTO;
 import com.ndt.AcademicAdvising.pojo.Comment;
-import org.springframework.data.domain.Page;
+import java.util.Map;
 
 /**
  *
@@ -14,7 +15,7 @@ import org.springframework.data.domain.Page;
  */
 public interface CommentService {
     Comment getComment(int postId);
-    Page<ResponseCommentDTO> getComments (int postId);
+    PageResponseDTO<ResponseCommentDTO> getComments (Map<String, String> params, int postId);
     ResponseCommentDTO addComment(String content, int postId);
     void addCommentAI(String content, int postId);
     ResponseCommentDTO updateComment(int commentId, String content);

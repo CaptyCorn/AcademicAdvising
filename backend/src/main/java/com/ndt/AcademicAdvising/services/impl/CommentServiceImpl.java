@@ -4,6 +4,7 @@
  */
 package com.ndt.AcademicAdvising.services.impl;
 
+import com.ndt.AcademicAdvising.dto.PageResponseDTO;
 import com.ndt.AcademicAdvising.dto.ResponseCommentDTO;
 import com.ndt.AcademicAdvising.pojo.Comment;
 import com.ndt.AcademicAdvising.pojo.User;
@@ -11,6 +12,7 @@ import com.ndt.AcademicAdvising.repositories.CommentRepository;
 import com.ndt.AcademicAdvising.repositories.PostRepository;
 import com.ndt.AcademicAdvising.repositories.UserRepository;
 import com.ndt.AcademicAdvising.services.CommentService;
+import java.util.Map;
 import java.util.Objects;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -42,6 +44,17 @@ public class CommentServiceImpl implements CommentService{
         dto.setCreatedAt(c.getCreatedAt());
         dto.setNameUserComment(c.getUser().getName());
         dto.setPostId(c.getPost().getId());
+        dto.setAvatarUserComment(c.getUser().getAvatar());
+        return dto;
+    }
+    
+    private PageResponseDTO<ResponseCommentDTO> toPageDTO(Page<ResponseCommentDTO> page) {
+        PageResponseDTO<ResponseCommentDTO> dto = new PageResponseDTO<>();
+        dto.setContent(page.getContent());
+        dto.setPage(page.getNumber());
+        dto.setSize(page.getSize());
+        dto.setTotalElements(page.getTotalElements());
+        dto.setTotalPages(page.getTotalPages());
         return dto;
     }
     
@@ -58,9 +71,8 @@ public class CommentServiceImpl implements CommentService{
     }
 
     @Override
-    public Page<ResponseCommentDTO> getComments(int postId) {
-        Pageable pageable = PageRequest.of(0, 5);
-        return this.commentRepo.findAllByPostIdOrderByCreatedAtDesc(postId, pageable).map(this::toDTO);
+    public PageResponseDTO<ResponseCommentDTO> getComments(Map<String, String> params, int postId) {
+        return toPageDTO(this.commentRepo.getListComment(params, postId).map(this::toDTO));
     }
 
     @Override
