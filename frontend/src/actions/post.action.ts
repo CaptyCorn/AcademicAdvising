@@ -44,3 +44,22 @@ export const loadPosts = async (page: number) => {
     const responseInfo = await res.json();
     return responseInfo.data;
 };
+
+export const searchPosts = async (keyword: string, page: number = 0) => {
+    const token = (await cookies()).get('token')?.value;
+    const query = new URLSearchParams({
+        kw: keyword,
+        page: String(page)
+    });
+    const res = await fetch(`${callAPI(endpoints['posts'])}?${query.toString()}`, {
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+        }
+    });
+
+    if (!res.ok) throw new Error('Không thể tìm kiếm bài đăng');
+
+    const responseInfo = await res.json();
+    return responseInfo.data;
+};
