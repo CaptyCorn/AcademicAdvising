@@ -2,6 +2,7 @@
 import { requestPostCreate } from '@/actions/post.action';
 import { AuthContext } from '@/app/_context/AuthContext';
 import { use, useState, useTransition } from 'react';
+import { useRouter } from 'next/navigation';
 import { Form, Image } from 'react-bootstrap';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
@@ -15,6 +16,7 @@ interface IProps {
 const PostModelCreate = (props: IProps) => {
     const { showModalCreate, setShowModalCreate } = props;
     const { user } = use(AuthContext);
+    const router = useRouter();
 
     const [content, setContent] = useState<string>("");
     const [isPending, startTransition] = useTransition()
@@ -30,6 +32,7 @@ const PostModelCreate = (props: IProps) => {
             if (resInfo.success) {
                 toast.success(resInfo.message);
                 handlecloseModal();
+                router.refresh();
             }
             else toast.error(resInfo.message);
         })

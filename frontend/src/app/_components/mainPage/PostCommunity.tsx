@@ -1,6 +1,7 @@
 'use client'
 
 import { AuthContext } from "@/app/_context/AuthContext";
+import { usePostCreate } from "@/app/_context/PostCreateContext";
 import { use, useEffect, useRef, useState } from "react";
 import { Button, Card, Dropdown, Image, Spinner } from "react-bootstrap";
 import PostModelCreate from "./PostModelCreate";
@@ -12,10 +13,9 @@ import Link from "next/link";
 interface Iprops {
     posts: IPosts[],
     page: number,
-    size: number,
     totalElements: number,
     totalPages: number,
-    loadMore: (page: number, size: number) => Promise<{
+    loadMore: (page: number) => Promise<{
         content: IPosts[];
         page: number;
         totalPages: number;
@@ -23,12 +23,12 @@ interface Iprops {
 }
 
 const PostCommunity = (props: Iprops) => {
-    const { posts: initialPosts, page: initialPage, size, totalPages, loadMore } = props;
+    const { posts: initialPosts, page: initialPage, totalPages, loadMore } = props;
     const { user } = use(AuthContext);
     const [posts, setPosts] = useState(initialPosts);
     const [page, setPage] = useState(initialPage);
     const [loading, setLoading] = useState(false);
-    const [showModalCreate, setShowModalCreate] = useState<boolean>(false)
+    const { showCreatePost, openCreatePost, closeCreatePost } = usePostCreate();
     const loadMoreRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
@@ -40,7 +40,7 @@ const PostCommunity = (props: Iprops) => {
 
             setLoading(true);
             try {
-                const nextPage = await loadMore(page + 1, size);
+                const nextPage = await loadMore(page + 1);
                 setPosts((current) => [...current, ...nextPage.content]);
                 setPage(nextPage.page);
             } finally {
@@ -50,16 +50,16 @@ const PostCommunity = (props: Iprops) => {
 
         observer.observe(target);
         return () => observer.disconnect();
-    }, [loadMore, loading, page, size, totalPages]);
+    }, [loadMore, loading, page, totalPages]);
 
     return(
         <div className="container py-4" style={{ maxWidth: 700 }}>
             <div className="d-flex align-items-center gap-3 p-3 mb-4 bg-white border rounded-4 shadow-sm">
                 <Image src={user?.avatar || "/file.svg"} alt="Ảnh đại diện" width={46} height={46} roundedCircle className={styles.avatar} />
-                <button type="button" className={`flex-grow-1 border-0 text-start rounded-pill px-4 py-3 ${styles.composer}`} onClick={() => setShowModalCreate(true)}>
+                <button type="button" className={`flex-grow-1 border-0 text-start rounded-pill px-4 py-3 ${styles.composer}`} onClick={openCreatePost}>
                     {user?.firstName || user?.lastName ? `${user.firstName} ${user.lastName}` : user?.username || "Bạn"}, bạn đang thắc mắc gì thế?
                 </button>
-                <Button variant="primary" className="rounded-pill px-4" onClick={() => setShowModalCreate(true)}>Đăng</Button>
+                <Button variant="primary" className="rounded-pill px-4" onClick={openCreatePost}>Đăng</Button>
             </div>
 
             <div className="d-flex flex-column gap-3">
@@ -100,7 +100,7 @@ const PostCommunity = (props: Iprops) => {
                 {!loading && page >= totalPages - 1 && posts.length > 0 && <small className="text-secondary">Bạn đã xem hết bài đăng.</small>}
             </div>
 
-            <PostModelCreate showModalCreate={showModalCreate} setShowModalCreate={setShowModalCreate} />
+            <PostModelCreate showModalCreate={showCreatePost} setShowModalCreate={(value) => value ? openCreatePost() : closeCreatePost()} />
         </div>
     );
 }

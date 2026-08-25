@@ -1,7 +1,7 @@
 'use server'
 
 import { callAPI, endpoints } from "@/config/apis"
-import { revalidatePath } from "next/cache"
+import { revalidateTag } from "next/cache"
 import { cookies } from "next/headers"
 
 export const requestPostCreate = async (content: string) => {
@@ -15,11 +15,10 @@ export const requestPostCreate = async (content: string) => {
         },
         body: JSON.stringify({'content': content})
     })
-
     const responseInfo = await res.json();
 
     if(responseInfo.success) {
-        revalidatePath("/posts");
+        revalidateTag('list-posts', 'max');
         return {
             success: true,
             message: responseInfo.message
@@ -31,9 +30,9 @@ export const requestPostCreate = async (content: string) => {
         }
 }
 
-export const loadPosts = async (page: number, size: number) => {
+export const loadPosts = async (page: number) => {
     const token = (await cookies()).get('token')?.value;
-    const res = await fetch(`${callAPI(endpoints['posts'])}?page=${page}&size=${size}`, {
+    const res = await fetch(`${callAPI(endpoints['posts'])}?page=${page}`, {
         headers: {
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${token}`

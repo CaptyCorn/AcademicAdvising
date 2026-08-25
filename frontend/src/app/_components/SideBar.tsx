@@ -2,6 +2,7 @@
 
 import { LogoutAction } from "@/actions/auth.action";
 import { AuthContext } from "@/app/_context/AuthContext";
+import { usePostCreate } from "@/app/_context/PostCreateContext";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
@@ -13,7 +14,7 @@ type IconName = "home" | "plus" | "search" | "calendar" | "chat" | "heart" | "us
 
 const mainItems: { href: string; label: string; icon: IconName }[] = [
 	{ href: "/", label: "Dành cho bạn", icon: "home" },
-	{ href: "/new-thread", label: "Bài đăng mới", icon: "plus" },
+	{ href: "/new-post", label: "Bài đăng mới", icon: "plus" },
 	{ href: "/search", label: "Tìm kiếm", icon: "search" },
 	// { href: "/appointments", label: "Lịch tư vấn", icon: "calendar" },
 	{ href: "/consultations", label: "Tin nhắn", icon: "chat" },
@@ -46,6 +47,7 @@ const SideBar = () => {
 	const pathname = usePathname();
 	const router = useRouter();
 	const { user } = use(AuthContext);
+	const { openCreatePost } = usePostCreate();
 	const [isCollapsed, setIsCollapsed] = useState(false);
 	const [isMoreOpen, setIsMoreOpen] = useState(false);
 	const [isLoggingOut, startLogout] = useTransition();
@@ -66,6 +68,14 @@ const SideBar = () => {
 		});
 	};
 
+	const handleNavigation = (href: string) => {
+		if (href === "/new-post") {
+			openCreatePost();
+			return;
+		}
+		router.push(href);
+	};
+
 	return (
 		<aside className={`d-flex flex-column flex-shrink-0 min-vh-100 p-3 bg-white border-end ${styles.sidebar} ${isCollapsed ? styles.collapsed : ""}`}>
 			<Link href="/" onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })} className="d-flex align-items-center gap-2 px-2 mb-3 text-dark text-decoration-none">
@@ -77,7 +87,13 @@ const SideBar = () => {
 
 			<nav className="nav flex-column gap-1 flex-grow-1" aria-label="Điều hướng chính">
 				{mainItems.map((item) => (
-					<Link key={item.href} href={item.href} title={isCollapsed ? item.label : undefined} className={`nav-link d-flex align-items-center gap-3 px-3 py-2 rounded-3 text-dark ${styles.navItem} ${item.label === "Tin nhắn" ? "mt-4" : ""} ${isActive(item.href) ? "bg-light fw-semibold" : ""}`}>
+					<Link
+						key={item.href} 
+						href={item.href} 
+						onClick={(event) => { if (item.href === "/new-post") { event.preventDefault(); handleNavigation(item.href); } }} 
+						title={isCollapsed ? item.label : undefined} 
+						className={`nav-link d-flex align-items-center gap-3 px-3 py-2 rounded-3 text-dark ${styles.navItem} ${item.label === "Tin nhắn" ? "mt-4" : ""} ${isActive(item.href) ? "bg-light fw-semibold" : ""}`}
+					>
 						<Icon name={item.icon} />
 						<span className={styles.navLabel}>{item.label}</span>
 					</Link>
@@ -88,17 +104,17 @@ const SideBar = () => {
 					<span className={styles.sectionLabel}>Bảng feed</span>
 					<span className={styles.sectionLabel}>Chỉnh sửa</span>
 				</div> */}
-					{/* <Link href="/following" className={`nav-link px-3 py-2 rounded-3 text-dark ${styles.navItem}`}><span className={styles.navLabel}>Đang theo dõi</span></Link> */}
-					<Link href="/self-posts" className={`nav-link d-flex align-items-center gap-3 px-3 py-2 rounded-3 text-dark ${styles.navItem}`}>
-						<Icon name="book" />
-						<span className={styles.navLabel}>Bài viết tự tạo</span>
-					</Link>
-					<Link href="/book-exchange" className={`nav-link d-flex align-items-center gap-3 px-3 py-2 rounded-3 text-dark ${styles.navItem}`}>
-						<Icon name="store" />
-						<span className={styles.navLabel}>Trao đổi sách</span>
-					</Link>
-                <div className="border-top my-3" />
-                
+				{/* <Link href="/following" className={`nav-link px-3 py-2 rounded-3 text-dark ${styles.navItem}`}><span className={styles.navLabel}>Đang theo dõi</span></Link> */}
+				<Link href="/self-posts" className={`nav-link d-flex align-items-center gap-3 px-3 py-2 rounded-3 text-dark ${styles.navItem}`}>
+					<Icon name="book" />
+					<span className={styles.navLabel}>Bài viết tự tạo</span>
+				</Link>
+				<Link href="/book-exchange" className={`nav-link d-flex align-items-center gap-3 px-3 py-2 rounded-3 text-dark ${styles.navItem}`}>
+					<Icon name="store" />
+					<span className={styles.navLabel}>Trao đổi sách</span>
+				</Link>
+				<div className="border-top my-3" />
+
 			</nav>
 
 			<div className="d-flex align-items-center gap-2 p-2 mb-2">

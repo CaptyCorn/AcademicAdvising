@@ -11,7 +11,8 @@ const HomePage = async () => {
     headers: {
       'Content-Type': 'application/json',
       'Authorization': `Bearer ${token}`
-    }
+    },
+    next: { tags: ['list-posts'] }
   })
 
   const responseInfo = await res.json();
@@ -21,9 +22,9 @@ const HomePage = async () => {
     <>
       <Header />
       <PostCommunity
+        key={`${data.totalElements}-${data.page}`}
         posts={data.content}
         page={data.page}
-        size={data.size}
         totalElements={data.totalElements}
         totalPages={data.totalPages}
         loadMore={loadPosts}
