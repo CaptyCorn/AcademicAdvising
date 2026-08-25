@@ -19,4 +19,6 @@ public interface PostService {
     void deletePost(int postId);
     ResponsePostDTO updatePost(int postId, String content);
     public Page<ResponsePostDTO> getListPostUser();
+    ResponsePostDTO getPostDetail(int postId);
+    
 }

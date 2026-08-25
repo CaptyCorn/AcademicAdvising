@@ -14,4 +14,5 @@ import org.springframework.data.domain.Page;
  */
 public interface CustomPostRepository {
     Page<ResponsePostDTO> getListPost(Map<String, String> params);
+    ResponsePostDTO getPostById(int postId);
 }

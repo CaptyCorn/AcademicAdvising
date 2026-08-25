@@ -100,6 +100,31 @@ public class ApiPostController {
                     );
         }
     }
+    
+    @GetMapping("/posts/{postId}")
+    ResponseEntity<ResponseObjectDTO> postDetail(@PathVariable(value = "postId") int postId) {
+        try {
+            return ResponseEntity
+                    .status(HttpStatus.OK)
+                    .body(
+                            new ResponseObjectDTO(
+                                    Boolean.TRUE,
+                                    200,
+                                    "Lấy bài đăng thành công.",
+                                    this.postService.getPostDetail(postId))
+                    );
+        } catch (Exception e) {
+            return ResponseEntity
+                    .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(
+                            new ResponseObjectDTO(
+                                    Boolean.FALSE,
+                                    500,
+                                    "Lỗi hệ thống",
+                                    null)
+                    );
+        }
+    }
 
     @PutMapping("/posts/{postId}")
     ResponseEntity<ResponseObjectDTO> updatePost(@PathVariable(value = "postId") int postId,

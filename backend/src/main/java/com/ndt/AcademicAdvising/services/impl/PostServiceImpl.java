@@ -124,4 +124,9 @@ public class PostServiceImpl implements PostService {
                 .map(this::toDTO);
     }
 
+    @Override
+    public ResponsePostDTO getPostDetail(int postId) {
+        return this.postRepo.getPostById(postId);
+    }
+
 }

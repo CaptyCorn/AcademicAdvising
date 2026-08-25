@@ -27,11 +27,13 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.stereotype.Repository;
 
 /**
  *
  * @author ngodo
  */
+@Repository
 public class PostRepositoryImpl implements CustomPostRepository {
 
     @PersistenceContext
@@ -144,5 +146,44 @@ public class PostRepositoryImpl implements CustomPostRepository {
         dto.setCommentCount(tuple.get("commentCount", Long.class));
 
         return dto;
+    }
+
+    @Override
+    public ResponsePostDTO getPostById(int postId) {
+        CriteriaBuilder builder = entityManager.getCriteriaBuilder();
+        CriteriaQuery<Tuple> query = builder.createTupleQuery();
+        Root postRoot = query.from(Post.class);
+
+        Join<Post, User> userJoin = postRoot.join("user", JoinType.INNER);
+        Join<Post, Comment> commentJoin = postRoot.join("comments", JoinType.LEFT);
+
+        query.select(
+                builder.tuple(
+                        postRoot.get("id").alias("id"),
+                        postRoot.get("content").alias("content"),
+                        postRoot.get("createdAt").alias("createdAt"),
+                        userJoin.get("firstName").alias("firstName"),
+                        userJoin.get("lastName").alias("lastName"),
+                        userJoin.get("username").alias("username"),
+                        userJoin.get("email").alias("email"),
+                        userJoin.get("avatar").alias("avatar"),
+                        userJoin.get("studentCode").alias("studentCode"),
+                        builder.count(commentJoin.get("id")).alias("commentCount")
+                )
+        );
+        query.where(builder.equal(postRoot.get("id"), postId));
+
+        query.groupBy(
+                postRoot.get("id"),
+                postRoot.get("content"),
+                postRoot.get("createdAt"),
+                userJoin.get("firstName"),
+                userJoin.get("lastName"),
+                userJoin.get("username"),
+                userJoin.get("email"),
+                userJoin.get("avatar"),
+                userJoin.get("studentCode")
+        );
+        return toDTO(entityManager.createQuery(query).getSingleResult());
     }
 }
