@@ -36,7 +36,8 @@ import org.hibernate.annotations.UpdateTimestamp;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class User implements Serializable{
+public class User implements Serializable {
+
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Integer id;
@@ -71,32 +72,38 @@ public class User implements Serializable{
     private Date updatedAt;
     @OneToMany(cascade = CascadeType.REMOVE, mappedBy = "user")
     private Set<Book> books;
-    
+
     @OneToMany(mappedBy = "buyer")
     private Set<Payment> buyingPayments;
     @OneToMany(mappedBy = "seller")
     private Set<Payment> sellingPayments;
-    
+
     @OneToMany(cascade = CascadeType.REMOVE, mappedBy = "sender")
     private Set<Notification> sendingNotifications;
     @OneToMany(cascade = CascadeType.REMOVE, mappedBy = "receiver")
     private Set<Notification> receivingNotifications;
-    
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "last_sender")
-    private Set<Conversation> conversations;
-    
+
+    @OneToMany(mappedBy = "sender")
+    private Set<Conversation> senderConversations;
+
+    @OneToMany(mappedBy = "receiver")
+    private Set<Conversation> receiverConversations;
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "lastSender")
+    private Set<Conversation> lastSenderConversations;
+
     @OneToMany(mappedBy = "sender")
     private Set<Message> messages;
-    
+
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "sender")
     private Set<Report> reports;
-    
+
     @OneToMany(cascade = CascadeType.REMOVE, mappedBy = "user")
     private Set<Post> posts;
-    
+
     @OneToMany(cascade = CascadeType.REMOVE, mappedBy = "user")
     private Set<Comment> comments;
-    
+
     @OneToMany(cascade = CascadeType.REMOVE, mappedBy = "user")
     private Set<CommentReaction> commentReactions;
 

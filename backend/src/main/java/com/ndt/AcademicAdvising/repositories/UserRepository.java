@@ -13,7 +13,7 @@ import org.springframework.stereotype.Repository;
  * @author ngodo
  */
 @Repository
-public interface UserRepository extends JpaRepository<User, Long>{
+public interface UserRepository extends JpaRepository<User, Integer>{
     User findByUsername(String username);
     Boolean existsByUsername(String username);
 }
