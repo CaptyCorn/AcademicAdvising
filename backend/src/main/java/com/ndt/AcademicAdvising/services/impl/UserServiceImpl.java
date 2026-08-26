@@ -159,7 +159,10 @@ public class UserServiceImpl implements UserService {
         }
         return toProfileDTO(this.userRepo.save(u));
     }
-    
-    
 
+    @Override
+    public ResponseUserDTO getUserById(int userId) {
+        return toDTO(this.userRepo.findById(userId).orElseThrow());
+    }
+    
 }

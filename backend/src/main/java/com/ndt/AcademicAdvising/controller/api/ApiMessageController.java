@@ -4,6 +4,7 @@
  */
 package com.ndt.AcademicAdvising.controller.api;
 
+import com.ndt.AcademicAdvising.dto.RequestMessageDTO;
 import com.ndt.AcademicAdvising.dto.ResponseObjectDTO;
 import com.ndt.AcademicAdvising.services.MessageService;
 import java.util.Map;
@@ -27,7 +28,7 @@ public class ApiMessageController {
     private MessageService messageService;
 
     @PostMapping("/send/messages")
-    ResponseEntity<ResponseObjectDTO> insert(@RequestBody Map<String, String> data) {
+    ResponseEntity<ResponseObjectDTO> insert(@RequestBody RequestMessageDTO data) {
         try {
             return ResponseEntity
                     .status(HttpStatus.CREATED)

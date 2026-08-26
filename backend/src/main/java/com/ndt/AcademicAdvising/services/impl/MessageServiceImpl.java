@@ -5,6 +5,7 @@
 package com.ndt.AcademicAdvising.services.impl;
 
 import com.ndt.AcademicAdvising.dto.PageResponseDTO;
+import com.ndt.AcademicAdvising.dto.RequestMessageDTO;
 import com.ndt.AcademicAdvising.dto.ResponseMessageDTO;
 import com.ndt.AcademicAdvising.dto.ResponseUserDTO;
 import com.ndt.AcademicAdvising.pojo.Conversation;
@@ -51,7 +52,7 @@ public class MessageServiceImpl implements MessageService {
         ResponseMessageDTO dto = new ResponseMessageDTO();
         dto.setId(message.getId());
         dto.setContent(message.getContent());
-        dto.setConversationid(message.getConversation().getId());
+        dto.setConversationId(message.getConversation().getId());
         dto.setSender(toUserDTO(message.getSender()));
         dto.setCreatedAt(message.getCreatedAt());
         
@@ -74,10 +75,10 @@ public class MessageServiceImpl implements MessageService {
     }
 
     @Override
-    public ResponseMessageDTO createMessage(Map<String, String> data) {
-        String content = data.get("content");
-        int receiverId = Integer.parseInt(data.get("receiverId"));
-        String conversationIdStr = data.get("conversationId");
+    public ResponseMessageDTO createMessage(RequestMessageDTO data) {
+        String content = data.getContent();
+        Integer receiverId = data.getReceiverId();
+        Integer conversationIdInte = data.getConversationId();
 
         if (content.isBlank()) {
             throw new IllegalArgumentException("Nội dung không được trống");
@@ -86,8 +87,8 @@ public class MessageServiceImpl implements MessageService {
         User currentUser = getCurrentUser();
         
         Conversation conversation;
-        if (conversationIdStr != null) {
-            int conversationId = Integer.parseInt(conversationIdStr);
+        if (conversationIdInte != null) {
+            int conversationId = conversationIdInte;
             conversation = this.conversationRepo.findById(conversationId)
                     .orElseThrow();
         } else {

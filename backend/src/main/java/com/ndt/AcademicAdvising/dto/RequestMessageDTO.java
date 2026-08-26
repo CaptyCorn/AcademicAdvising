@@ -4,7 +4,6 @@
  */
 package com.ndt.AcademicAdvising.dto;
 
-import java.util.Date;
 import lombok.Data;
 
 /**
@@ -12,10 +11,8 @@ import lombok.Data;
  * @author ngodo
  */
 @Data
-public class ResponseMessageDTO {
-    private Integer id;
+public class RequestMessageDTO {
+    private Integer receiverId;
     private String content;
-    private Date createdAt;
     private Integer conversationId;
-    private ResponseUserDTO sender;
 }
