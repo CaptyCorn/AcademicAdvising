@@ -1,0 +1,69 @@
+.brandPanel {
+  background: #103f4b;
+  color: #f5fbf9;
+  font-family: var(--font-be-vietnam-pro), sans-serif;
+}
+
+.brandLogo,
+.mobileLogo {
+  display: flex;
+  width: fit-content;
+  align-items: center;
+  justify-content: center;
+  background: #fff;
+}
+
+.brandLogo {
+  width: 120px;
+  height: 120px;
+  padding: 10px;
+}
+
+.brandLogo img,
+.mobileLogo img {
+  height: auto;
+  max-width: 100%;
+  object-fit: contain;
+}
+
+.mobileLogo {
+  width: 100px;
+  height: 100px;
+  padding: 8px;
+}
+
+.brandPanel h1 {
+  max-width: 440px;
+  font-size: clamp(2.25rem, 4vw, 3.5rem);
+  line-height: 1.2;
+}
+
+.brandPanel p {
+  max-width: 370px;
+  color: #c1dcd6;
+}
+
+.brandPanel hr {
+  border-color: #8bd4c1;
+  opacity: 1;
+}
+
+.formEyebrow {
+  color: #087f82;
+  letter-spacing: 2px;
+}
+
+.formEyebrow:hover {
+  color: #056466;
+}
+
+.registerLink {
+  color: #087f82;
+  font-weight: 600;
+}
+
+.registerLink:hover {
+  color: #056466;
+  text-decoration: underline !important;
+}
+
