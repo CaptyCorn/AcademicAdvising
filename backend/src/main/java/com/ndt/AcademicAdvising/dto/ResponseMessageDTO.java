@@ -4,22 +4,18 @@
  */
 package com.ndt.AcademicAdvising.dto;
 
-import lombok.AllArgsConstructor;
+import java.util.Date;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 /**
  *
  * @author ngodo
  */
 @Data
-@AllArgsConstructor
-@NoArgsConstructor
-public class ResponseUserDTO {
+public class ResponseMessageDTO {
     private Integer id;
-    public String name;
-    private String username;
-    private String email;
-    private String avatar;
-    private String studentCode;
+    private String content;
+    private Date createdAt;
+    private Integer conversationId;
+    private ResponseUserDTO sender;
 }

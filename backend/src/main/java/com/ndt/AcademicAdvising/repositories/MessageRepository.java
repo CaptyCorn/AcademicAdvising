@@ -4,7 +4,8 @@
  */
 package com.ndt.AcademicAdvising.repositories;
 
-import com.ndt.AcademicAdvising.pojo.User;
+import com.ndt.AcademicAdvising.pojo.Message;
+import com.ndt.AcademicAdvising.repositories.custom.CustomMessageRepository;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -13,7 +14,6 @@ import org.springframework.stereotype.Repository;
  * @author ngodo
  */
 @Repository
-public interface UserRepository extends JpaRepository<User, Integer>{
-    User findByUsername(String username);
-    Boolean existsByUsername(String username);
+public interface MessageRepository extends JpaRepository<Message, Integer>, CustomMessageRepository{
+    
 }

@@ -47,7 +47,7 @@ public class Notification {
     @Enumerated(EnumType.STRING)
     private NotificationType type;
     @Column(name = "is_read")
-    private Boolean isRead;
+    private Boolean isRead = false;
     @Column(length = 500, nullable = false)
     private String link;
     @CreationTimestamp

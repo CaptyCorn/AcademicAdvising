@@ -18,7 +18,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
@@ -34,13 +33,14 @@ public class PostServiceImpl implements PostService {
 
     @Autowired
     private UserRepository userRepo;
-
+    
     private ResponsePostDTO toDTO(Post post) {
         ResponsePostDTO dto = new ResponsePostDTO();
         dto.setId(post.getId());
         dto.setContent(post.getContent());
         dto.setCreatedAt(post.getCreatedAt());
-        dto.setUser(new ResponseUserDTO(post.getUser().getName(), 
+        dto.setUser(new ResponseUserDTO(post.getUser().getId(),
+                                        post.getUser().getName(), 
                                         post.getUser().getUsername(), 
                                         post.getUser().getEmail(), 
                                         post.getUser().getAvatar(), 

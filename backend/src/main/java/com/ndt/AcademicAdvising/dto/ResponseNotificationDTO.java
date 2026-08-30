@@ -4,22 +4,21 @@
  */
 package com.ndt.AcademicAdvising.dto;
 
-import lombok.AllArgsConstructor;
+import com.ndt.AcademicAdvising.enums.NotificationType;
+import java.util.Date;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 /**
  *
  * @author ngodo
  */
 @Data
-@AllArgsConstructor
-@NoArgsConstructor
-public class ResponseUserDTO {
+public class ResponseNotificationDTO {
     private Integer id;
-    public String name;
-    private String username;
-    private String email;
-    private String avatar;
-    private String studentCode;
+    private String title;
+    private String content;
+    private NotificationType type;
+    private Boolean isRead;
+    private String link;
+    private Date createdAt;
 }

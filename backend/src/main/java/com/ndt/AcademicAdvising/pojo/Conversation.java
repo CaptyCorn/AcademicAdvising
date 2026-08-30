@@ -28,7 +28,6 @@ import org.hibernate.annotations.UpdateTimestamp;
  *
  * @author ngodo
  */
-
 @Entity
 @Table(name = "tbl_conversation")
 @Getter
@@ -36,11 +35,13 @@ import org.hibernate.annotations.UpdateTimestamp;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Conversation {
+
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Integer id;
     @Column(name = "last_message", length = 500)
     private String lastMessage;
+    @UpdateTimestamp
     @Column(name = "last_message_time")
     private Date lastMessageTime;
     @CreationTimestamp
@@ -49,10 +50,18 @@ public class Conversation {
     @UpdateTimestamp
     @Column(name = "updated_at")
     private Date updatedAt;
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "sender_id")
+    private User sender;
+
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "receiver_id")
+    private User receiver;
+    
     @JoinColumn(name = "last_sender_id", referencedColumnName = "id")
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
-    private User last_sender;
+    private User lastSender;
     @OneToMany(cascade = CascadeType.REMOVE, mappedBy = "conversation")
     private Set<Message> messages;
-    
+
 }

@@ -130,6 +130,7 @@ public class PostRepositoryImpl implements CustomPostRepository {
 
         ResponseUserDTO user
                 = new ResponseUserDTO(
+                        tuple.get("id", Integer.class),
                         lastName + " " + firstName,
                         tuple.get("username", String.class),
                         tuple.get("email", String.class),

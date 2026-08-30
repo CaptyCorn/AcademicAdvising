@@ -76,10 +76,12 @@ public class AIConfigs {
         ContentRetriever contentRetriever = EmbeddingStoreContentRetriever.builder()
                 .embeddingModel(embeddingModel())
                 .embeddingStore(embeddingStrore())
+                .maxResults(5)
+                .minScore(0.7)
                 .build();
         
         ContentInjector contentInjector = DefaultContentInjector.builder()
-                .metadataKeysToInclude(Arrays.asList("file_name", "index"))
+                .metadataKeysToInclude(Arrays.asList("file_name", "section", "page", "chunk_index", "document_type"))
                 .build();
         
         RetrievalAugmentor retrievalAugmentor = DefaultRetrievalAugmentor.builder()
