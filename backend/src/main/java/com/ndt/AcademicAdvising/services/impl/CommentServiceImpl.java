@@ -7,11 +7,13 @@ package com.ndt.AcademicAdvising.services.impl;
 import com.ndt.AcademicAdvising.dto.PageResponseDTO;
 import com.ndt.AcademicAdvising.dto.ResponseCommentDTO;
 import com.ndt.AcademicAdvising.pojo.Comment;
+import com.ndt.AcademicAdvising.pojo.Post;
 import com.ndt.AcademicAdvising.pojo.User;
 import com.ndt.AcademicAdvising.repositories.CommentRepository;
 import com.ndt.AcademicAdvising.repositories.PostRepository;
 import com.ndt.AcademicAdvising.repositories.UserRepository;
 import com.ndt.AcademicAdvising.services.CommentService;
+import com.ndt.AcademicAdvising.services.NotificationService;
 import java.util.Map;
 import java.util.Objects;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,6 +38,9 @@ public class CommentServiceImpl implements CommentService{
     
     @Autowired
     private PostRepository postRepo;
+    
+    @Autowired
+    private NotificationService notificationService;
     
     private ResponseCommentDTO toDTO(Comment c) {
         ResponseCommentDTO dto = new ResponseCommentDTO();
@@ -80,10 +85,16 @@ public class CommentServiceImpl implements CommentService{
         if (content == null || content.isBlank())
             throw new IllegalArgumentException("Nội dung không được để trống.");
         
+        Post post = this.postRepo.findById(postId).orElseThrow(() -> new IllegalArgumentException("Bài đăng không tồn tại"));
+        User currentUser = getCurrentUser();
+        
         Comment c = new Comment();
         c.setContent(content);
-        c.setPost(this.postRepo.findById(postId).orElseThrow(() -> new IllegalArgumentException("Bài đăng không tồn tại")));
-        c.setUser(getCurrentUser());
+        c.setPost(post);
+        c.setUser(currentUser);
+        
+        User postOwner = post.getUser();
+        this.notificationService.createCommentNotification(currentUser, postOwner, postId);
         
         return toDTO(this.commentRepo.save(c));
     }
