@@ -9,6 +9,7 @@ import com.ndt.AcademicAdvising.dto.ResponseMessageDTO;
 import com.ndt.AcademicAdvising.dto.ResponseUserDTO;
 import com.ndt.AcademicAdvising.services.MessageService;
 import com.ndt.AcademicAdvising.services.UserService;
+import java.security.Principal;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
@@ -31,11 +32,16 @@ public class ChatWebSocketController {
     private SimpMessagingTemplate simpMessagingTemplate;
     
     @MessageMapping("/chat")
-    void sendMessage(RequestMessageDTO data) {
+    void sendMessage(RequestMessageDTO data, Principal principal) {
         ResponseMessageDTO responseMessage = this.messageService.createMessage(data);
         ResponseUserDTO receiver = this.userService.getUserById(data.getReceiverId());
         this.simpMessagingTemplate.convertAndSendToUser(
                 receiver.getUsername(), 
+                "/queue/messages", 
+                responseMessage
+        );
+        this.simpMessagingTemplate.convertAndSendToUser(
+                principal.getName(), 
                 "/queue/messages", 
                 responseMessage
         );
