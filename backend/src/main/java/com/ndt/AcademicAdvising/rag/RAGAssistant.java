@@ -35,19 +35,4 @@ public interface RAGAssistant {
         """
     )
     String chat(@UserMessage String userMessage);
-
-    @SystemMessage(
-        """
-                Bạn là trợ lý tư vấn học vụ của Trường Đại học Mở
-                Thành phố Hồ Chí Minh.
-
-                Chỉ sử dụng thông tin trong context.
-                Không tự suy đoán hoặc bịa thông tin.
-                Nếu không đủ thông tin, hãy nói rõ không tìm thấy
-                thông tin phù hợp trong dữ liệu hiện có.
-
-                Trả lời ngắn gọn, đúng trọng tâm.
-        """
-    )
-    String chat(@MemoryId String conversationId, @UserMessage String userMessage);
 }

@@ -11,4 +11,5 @@ package com.ndt.AcademicAdvising.services;
  */
 public interface AIService {
     String getMessage(String question);
+    String chat(int conversationId, String question);
 }
