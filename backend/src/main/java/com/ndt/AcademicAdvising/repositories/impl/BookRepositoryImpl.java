@@ -46,6 +46,7 @@ public class BookRepositoryImpl implements CustomBookRepository{
         Root root = query.from(Book.class);
         
         query.select(root).distinct(true);
+        query.orderBy(builder.desc(root.get("createdAt")), builder.desc(root.get("id")));
         
         List<Predicate> predicates = buildPredicate(builder, root, params);
         
@@ -85,13 +86,19 @@ public class BookRepositoryImpl implements CustomBookRepository{
         if (params != null) {
             String kw = params.get("kw");
             if (kw != null && !kw.isEmpty()) {
-                predicates.add(builder.like(root.get("name"), String.format("%%%s%%", kw)));
+                predicates.add(builder.like(builder.lower(root.get("name")), String.format("%%%s%%", kw.toLowerCase())));
             }
             
             String subjectId = params.get("subjectId");
             if (subjectId != null && !subjectId.isEmpty()) {
                 Join<Book, Subject> subjectJoin = root.join("subjects", JoinType.INNER);
                 predicates.add(builder.equal(subjectJoin.get("id"), Integer.valueOf(subjectId)));
+            }
+
+            String majorId = params.get("majorId");
+            if (majorId != null && !majorId.isEmpty()) {
+                Join<Book, Subject> subjectJoin = root.join("subjects", JoinType.INNER);
+                predicates.add(builder.equal(subjectJoin.get("major").get("id"), Integer.valueOf(majorId)));
             }
         }
         return predicates;
@@ -105,6 +112,7 @@ public class BookRepositoryImpl implements CustomBookRepository{
         Root root = query.from(Book.class);
         
         query.select(root).distinct(true);
+        query.orderBy(builder.asc(root.get("id")));
         
         List<Predicate> predicates = buildPredicate(builder, root, params);
         predicates.add(builder.equal(root.get("user").get("id"), userId));
