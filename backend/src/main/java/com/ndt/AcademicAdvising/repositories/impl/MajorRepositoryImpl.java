@@ -40,6 +40,7 @@ public class MajorRepositoryImpl implements CustomMajorRepository{
         CriteriaBuilder builder = entityManager.getCriteriaBuilder();
         CriteriaQuery<Major> query = builder.createQuery(Major.class);
         Root root = query.from(Major.class);
+        query.orderBy(builder.asc(root.get("id")));
         
         List<Predicate> predicates = new ArrayList<>();
         
@@ -64,7 +65,17 @@ public class MajorRepositoryImpl implements CustomMajorRepository{
         
         CriteriaQuery<Long> countQuery = builder.createQuery(Long.class);
         Root countRoot = countQuery.from(Major.class);
-        countQuery.select(builder.count(countRoot)).where(predicates.toArray(Predicate[]::new));
+        List<Predicate> countPredicates = new ArrayList<>();
+        if (params != null) {
+            String kw = params.get("kw");
+            if (kw != null && !kw.isEmpty()) {
+                countPredicates.add(builder.like(countRoot.get("name"), String.format("%%%s%%", kw)));
+            }
+        }
+        countQuery.select(builder.count(countRoot));
+        if (!countPredicates.isEmpty()) {
+            countQuery.where(countPredicates.toArray(Predicate[]::new));
+        }
         Long totalMajor = entityManager.createQuery(countQuery).getSingleResult();
         return new PageImpl<>(resultList, PageRequest.of(page, majorSize), totalMajor);
     }

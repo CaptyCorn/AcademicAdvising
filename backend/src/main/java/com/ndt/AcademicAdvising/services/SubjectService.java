@@ -4,10 +4,10 @@
  */
 package com.ndt.AcademicAdvising.services;
 
+import com.ndt.AcademicAdvising.dto.PageResponseDTO;
 import com.ndt.AcademicAdvising.dto.ResponseSubjectDTO;
 import com.ndt.AcademicAdvising.pojo.Subject;
 import java.util.Map;
-import org.springframework.data.domain.Page;
 
 /**
  *
@@ -15,7 +15,7 @@ import org.springframework.data.domain.Page;
  */
 public interface SubjectService {
     ResponseSubjectDTO createSubject(Map<String, String> data);
-    Page<ResponseSubjectDTO> getSubjects(Map<String, String> params);
+    PageResponseDTO<ResponseSubjectDTO> getSubjects(Map<String, String> params);
     void deleteSubject(int subjectId);
     Subject getSubjectId(int subjectId);
 }

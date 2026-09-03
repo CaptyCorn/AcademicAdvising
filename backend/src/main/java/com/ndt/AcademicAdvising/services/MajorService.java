@@ -4,16 +4,16 @@
  */
 package com.ndt.AcademicAdvising.services;
 
+import com.ndt.AcademicAdvising.dto.PageResponseDTO;
 import com.ndt.AcademicAdvising.dto.ResponseMajorDTO;
 import java.util.Map;
-import org.springframework.data.domain.Page;
 
 /**
  *
  * @author ngodo
  */
 public interface MajorService {
-    Page<ResponseMajorDTO> getMajors(Map<String, String> params);
+    PageResponseDTO<ResponseMajorDTO> getMajors(Map<String, String> params);
     ResponseMajorDTO getMajorById(int majorId);
     ResponseMajorDTO createMajor(String name);
     void deleteMajor(int majorId);

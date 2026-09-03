@@ -4,6 +4,7 @@
  */
 package com.ndt.AcademicAdvising.services.impl;
 
+import com.ndt.AcademicAdvising.dto.PageResponseDTO;
 import com.ndt.AcademicAdvising.dto.ResponseSubjectDTO;
 import com.ndt.AcademicAdvising.pojo.Major;
 import com.ndt.AcademicAdvising.pojo.Subject;
@@ -36,6 +37,16 @@ public class SubjectServiceImpl implements SubjectService{
         dto.setMajorId(s.getMajor().getId());
         return dto;
     }
+    
+    private PageResponseDTO<ResponseSubjectDTO> toPageDTO(Page<ResponseSubjectDTO> page) {
+        PageResponseDTO<ResponseSubjectDTO> dto = new PageResponseDTO<>();
+        dto.setContent(page.getContent());
+        dto.setPage(page.getNumber());
+        dto.setSize(page.getSize());
+        dto.setTotalElements(page.getTotalElements());
+        dto.setTotalPages(page.getTotalPages());
+        return dto;
+    }
 
     @Override
     public ResponseSubjectDTO createSubject(Map<String, String> data) {
@@ -57,8 +68,8 @@ public class SubjectServiceImpl implements SubjectService{
     }
 
     @Override
-    public Page<ResponseSubjectDTO> getSubjects(Map<String, String> params) {
-        return this.subjectRepo.getListSubject(params).map(this::toDTO);
+    public PageResponseDTO<ResponseSubjectDTO> getSubjects(Map<String, String> params) {
+        return toPageDTO(this.subjectRepo.getListSubject(params).map(this::toDTO));
     }
 
     @Override

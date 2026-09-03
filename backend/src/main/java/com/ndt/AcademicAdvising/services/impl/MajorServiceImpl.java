@@ -4,11 +4,11 @@
  */
 package com.ndt.AcademicAdvising.services.impl;
 
+import com.ndt.AcademicAdvising.dto.PageResponseDTO;
 import com.ndt.AcademicAdvising.dto.ResponseMajorDTO;
 import com.ndt.AcademicAdvising.pojo.Major;
 import com.ndt.AcademicAdvising.repositories.MajorRepository;
 import com.ndt.AcademicAdvising.services.MajorService;
-import java.util.List;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -30,10 +30,20 @@ public class MajorServiceImpl implements MajorService{
         dto.setName(m.getName());
         return dto;
     }
+    
+    private PageResponseDTO<ResponseMajorDTO> toPageDTO(Page<ResponseMajorDTO> page) {
+        PageResponseDTO<ResponseMajorDTO> dto = new PageResponseDTO<>();
+        dto.setContent(page.getContent());
+        dto.setPage(page.getNumber());
+        dto.setSize(page.getSize());
+        dto.setTotalElements(page.getTotalElements());
+        dto.setTotalPages(page.getTotalPages());
+        return dto;
+    }
 
     @Override
-    public Page<ResponseMajorDTO> getMajors(Map<String, String> params) {
-        return this.majorRepo.getListMajor(params).map(this::toDTO);
+    public PageResponseDTO<ResponseMajorDTO> getMajors(Map<String, String> params) {
+        return toPageDTO(this.majorRepo.getListMajor(params).map(this::toDTO));
     }
 
     @Override
