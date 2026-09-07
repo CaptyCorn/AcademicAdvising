@@ -39,7 +39,7 @@ public class Conversation {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Integer id;
-    @Column(name = "last_message", length = 500)
+    @Column(name = "last_message", columnDefinition = "TEXT")
     private String lastMessage;
     @UpdateTimestamp
     @Column(name = "last_message_time")

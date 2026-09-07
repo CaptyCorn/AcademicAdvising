@@ -36,7 +36,7 @@ public class Message {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Integer id;
-    @Column(length = 255, nullable = false)
+    @Column(columnDefinition = "TEXT", nullable = false)
     private String content;
     @CreationTimestamp
     @Column(name = "created_at", updatable = false)

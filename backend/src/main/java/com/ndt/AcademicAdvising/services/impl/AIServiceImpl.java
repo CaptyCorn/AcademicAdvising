@@ -16,10 +16,10 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class AIServiceImpl implements AIService{
-//    @Autowired
+    @Autowired
     private RAGAssistant ragService;
     
-//    @Autowired
+    @Autowired
     private ChatRAGAssistant chatRagService;
 
     @Override

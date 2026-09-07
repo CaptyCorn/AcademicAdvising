@@ -13,7 +13,9 @@ import org.springframework.messaging.MessageChannel;
 import org.springframework.messaging.simp.stomp.StompCommand;
 import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
 import org.springframework.messaging.support.ChannelInterceptor;
+import org.springframework.messaging.support.MessageHeaderAccessor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
@@ -29,9 +31,14 @@ public class WebSocketAuthInterceptor implements ChannelInterceptor{
     @Autowired
     private UserService userService;
 
+    private static final String AUTHENTICATION_SESSION_ATTRIBUTE = "wsAuthentication";
+
     @Override
     public Message<?> preSend(Message<?> message, MessageChannel channel) {
-        StompHeaderAccessor accessor = StompHeaderAccessor.wrap(message);
+        StompHeaderAccessor accessor = MessageHeaderAccessor.getAccessor(
+                message,
+                StompHeaderAccessor.class
+        );
 
         if (StompCommand.CONNECT.equals(accessor.getCommand())) {
             String authHeader = accessor.getFirstNativeHeader("Authorization");
@@ -59,9 +66,17 @@ public class WebSocketAuthInterceptor implements ChannelInterceptor{
                         );
 
                 accessor.setUser(authentication);
+                if (accessor.getSessionAttributes() != null) {
+                    accessor.getSessionAttributes().put(AUTHENTICATION_SESSION_ATTRIBUTE, authentication);
+                }
 
             } catch (JwtException | IllegalArgumentException ex) {
                 throw new IllegalArgumentException("Invalid JWT", ex);
+            }
+        } else if (accessor.getUser() == null && accessor.getSessionAttributes() != null) {
+            Object sessionAuthentication = accessor.getSessionAttributes().get(AUTHENTICATION_SESSION_ATTRIBUTE);
+            if (sessionAuthentication instanceof Authentication authentication) {
+                accessor.setUser(authentication);
             }
         }
 
