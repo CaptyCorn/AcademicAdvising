@@ -23,6 +23,9 @@ export const endpoints = {
     'createBook': '/books',
     'deleteBook': (bookId: string) => `/books/${bookId}`,
     'bookUser': '/books/user',
+
+    'listConversation': '/conversations',
+    'listMessage': (conversationId: string) => `/conversations/${conversationId}/messages`,
 }
 
 export const callAPI = (endpoint: string) => {
