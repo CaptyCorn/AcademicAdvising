@@ -6,6 +6,7 @@ package com.ndt.AcademicAdvising.services.impl;
 
 import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
+import com.ndt.AcademicAdvising.dto.PageResponseDTO;
 import com.ndt.AcademicAdvising.dto.RequestBookDTO;
 import com.ndt.AcademicAdvising.dto.ResponseBookCreateDTO;
 import com.ndt.AcademicAdvising.dto.ResponseBookDTO;
@@ -105,14 +106,24 @@ public class BookServiceImpl implements BookService{
         return dto;
     }
     
+    private PageResponseDTO<ResponseBookDTO> toPageDTO(Page<ResponseBookDTO> page) {
+        PageResponseDTO<ResponseBookDTO> dto = new PageResponseDTO<>();
+        dto.setContent(page.getContent());
+        dto.setPage(page.getNumber());
+        dto.setSize(page.getSize());
+        dto.setTotalElements(page.getTotalElements());
+        dto.setTotalPages(page.getTotalPages());
+        return dto;
+    }
+    
     private User getCurrentUser() {
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
         return this.userRepo.findByUsername(username);
     }
 
     @Override
-    public Page<ResponseBookDTO> getListBook(Map<String, String> params) {
-        return this.bookRepo.getListBook(params).map(this::toDTO);
+    public PageResponseDTO<ResponseBookDTO> getListBook(Map<String, String> params) {
+        return toPageDTO(this.bookRepo.getListBook(params).map(this::toDTO));
     }
 
     @Override
@@ -204,9 +215,9 @@ public class BookServiceImpl implements BookService{
     }
 
     @Override
-    public Page<ResponseBookDTO> getListBookById(Map<String, String> params) {
+    public PageResponseDTO<ResponseBookDTO> getListBookByUserId(Map<String, String> params) {
         User u = getCurrentUser();
-        return this.bookRepo.getListBookById(u.getId(), params).map(this::toDTO);
+        return toPageDTO(this.bookRepo.getListBookById(u.getId(), params).map(this::toDTO));
     }
     
     

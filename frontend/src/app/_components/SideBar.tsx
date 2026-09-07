@@ -17,7 +17,7 @@ const mainItems: { href: string; label: string; icon: IconName }[] = [
 	{ href: "/new-post", label: "Bài đăng mới", icon: "plus" },
 	{ href: "/search", label: "Tìm kiếm", icon: "search" },
 	// { href: "/appointments", label: "Lịch tư vấn", icon: "calendar" },
-	{ href: "/consultations", label: "Tin nhắn", icon: "chat" },
+	{ href: "/conversation", label: "Tin nhắn", icon: "chat" },
 	{ href: "/activity", label: "Hoạt động", icon: "heart" },
 	{ href: "/profile", label: "Trang cá nhân", icon: "user" },
 	// { href: "/academic-results", label: "Thông tin chi tiết", icon: "chart" },

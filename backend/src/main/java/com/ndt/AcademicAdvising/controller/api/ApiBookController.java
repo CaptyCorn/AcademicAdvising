@@ -114,7 +114,7 @@ public class ApiBookController {
                                     Boolean.TRUE,
                                     200,
                                     "Lấy danh sách của người dùng thành công",
-                                    this.bookService.getListBookById(params)
+                                    this.bookService.getListBookByUserId(params)
                             )
                     );
         } catch (IllegalArgumentException i) {
