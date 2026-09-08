@@ -99,9 +99,9 @@ const SideBar = () => {
 
 				<div className="border-top my-3" />
 
-				<Link href="/self-posts" className={`nav-link d-flex align-items-center gap-3 px-3 py-2 rounded-3 text-dark ${styles.navItem}`}>
+				<Link href="/my-book" className={`nav-link d-flex align-items-center gap-3 px-3 py-2 rounded-3 text-dark ${styles.navItem}`}>
 					<Icon name="book" />
-					<span className={styles.navLabel}>Bài viết tự tạo</span>
+					<span className={styles.navLabel}>Sách của tôi</span>
 				</Link>
 				<Link href="/book-exchange" className={`nav-link d-flex align-items-center gap-3 px-3 py-2 rounded-3 text-dark ${styles.navItem}`}>
 					<Icon name="store" />

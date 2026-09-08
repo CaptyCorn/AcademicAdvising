@@ -21,8 +21,9 @@ export const endpoints = {
     'listbook': '/books',
     'bookDetail': (bookId: string) => `/books/${bookId}`,
     'contactBook': (bookId: string) => `/books/${bookId}/contact`,
-    'createBook': '/books',
+    'createBook': '/book',
     'deleteBook': (bookId: string) => `/books/${bookId}`,
+    'updateBookStatus': (bookId: string) => `/books/${bookId}/status`,
     'bookUser': '/books/user',
 
     'adminDashboard': '/admin/dashboard',

@@ -9,6 +9,7 @@ interface IBook {
     name: string,
     price: number,
     condition: string,
+    status?: string,
     image?: IImage,
     createdAt: Date
 }
