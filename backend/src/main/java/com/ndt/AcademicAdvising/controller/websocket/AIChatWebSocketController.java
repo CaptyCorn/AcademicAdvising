@@ -19,6 +19,7 @@ import org.springframework.stereotype.Controller;
  */
 @Controller
 public class AIChatWebSocketController {
+
     @Autowired
     private AIChatService aiChatService;
 
@@ -27,8 +28,11 @@ public class AIChatWebSocketController {
 
     @MessageMapping("/ai/chat")
     public void chat(RequestAIChatDTO request, Principal principal) {
+        if (principal == null) {
+            throw new IllegalStateException("WebSocket chưa được xác thực");
+        }
 
-        ResponseMessageDTO response = aiChatService.chat(request);
+        ResponseMessageDTO response = aiChatService.chat(request, principal.getName());
 
         messagingTemplate.convertAndSendToUser(
                 principal.getName(),

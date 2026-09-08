@@ -84,7 +84,7 @@ public class CommentServiceImpl implements CommentService{
     public ResponseCommentDTO addComment(String content, int postId) {
         if (content == null || content.isBlank())
             throw new IllegalArgumentException("Nội dung không được để trống.");
-        
+        System.out.println("Comment: " + content);
         Post post = this.postRepo.findById(postId).orElseThrow(() -> new IllegalArgumentException("Bài đăng không tồn tại"));
         User currentUser = getCurrentUser();
         
@@ -94,6 +94,7 @@ public class CommentServiceImpl implements CommentService{
         c.setUser(currentUser);
         
         User postOwner = post.getUser();
+        
         this.notificationService.createCommentNotification(currentUser, postOwner, postId);
         
         return toDTO(this.commentRepo.save(c));

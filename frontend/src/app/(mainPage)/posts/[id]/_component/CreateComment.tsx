@@ -2,7 +2,7 @@
 
 import { requestCommentCreate } from "@/actions/comment.action";
 import { AuthContext } from "@/app/_context/AuthContext";
-import { ChangeEvent, use, useRef, useState, useTransition, type FormEvent } from "react";
+import { ChangeEvent, use, useRef, useState, useTransition, type SubmitEvent } from "react";
 import { useRouter } from "next/navigation";
 import { Button, Card, Form, Image } from "react-bootstrap";
 import { toast } from "react-toastify";
@@ -27,7 +27,7 @@ const CreateComment = (props: IProps) => {
         setContent(textarea.value);
     };
 
-    const handleSubmit = (event: SubmitEvent) => {
+    const handleSubmit = (event: SubmitEvent<HTMLFormElement>) => {
         event.preventDefault();
 
         const commentContent = content.trim();
@@ -54,7 +54,7 @@ const CreateComment = (props: IProps) => {
     return (
         <Card className="border border-top-0 rounded-0 rounded-bottom-4 shadow-sm">
             <Card.Body className="p-2 p-md-3">
-                <Form onSubmit={() => handleSubmit}>
+                <Form onSubmit={handleSubmit}>
                     <div className="d-flex align-items-center gap-2">
                         <Image
                             src={user?.avatar || "/file.svg"}

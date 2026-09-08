@@ -20,3 +20,26 @@ export const requestListSubject = async (page: number = 0, majorId?: number): Pr
 	const responseInfo = await res.json();
 	return responseInfo.data;
 };
+
+export const requestCreateSubject = async (data: { name: string, description: string, majorId: number }): Promise<{ success: boolean, message: string, data?: ISubject }> => {
+	const token = (await cookies()).get('token')?.value;
+	const res = await fetch(`${callAPI(endpoints['createSubject'])}`, {
+		method: 'POST',
+		headers: {
+			'Content-Type': 'application/json',
+			'Authorization': `Bearer ${token}`
+		},
+		body: JSON.stringify({
+			name: data.name.trim(),
+			description: data.description.trim(),
+			majorId: String(data.majorId)
+		})
+	});
+
+	const responseInfo = await res.json();
+	return {
+		success: res.ok && responseInfo.success,
+		message: responseInfo.message || "Không thể thêm môn học",
+		data: responseInfo.data
+	};
+};

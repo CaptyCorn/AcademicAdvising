@@ -28,6 +28,7 @@ public class MajorServiceImpl implements MajorService{
         ResponseMajorDTO dto = new ResponseMajorDTO();
         dto.setId(m.getId());
         dto.setName(m.getName());
+        dto.setCreatedAt(m.getCreatedAt());
         return dto;
     }
     

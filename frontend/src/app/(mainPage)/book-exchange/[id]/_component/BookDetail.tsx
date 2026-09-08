@@ -1,8 +1,11 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
-import { Badge, Card, Image } from "react-bootstrap";
+import { requestBookContact } from "@/actions/book.action";
+import { useRouter } from "next/navigation";
+import { useState, useTransition } from "react";
+import { Badge, Button, Card, Image } from "react-bootstrap";
+import { toast } from "react-toastify";
 
 interface IProps {
     book: IBookDetail
@@ -21,8 +24,21 @@ const conditionLabel = (condition: string) => {
 
 const BookDetail = (props: IProps) => {
     const { book } = props;
+    const router = useRouter();
     const [activeImageIndex, setActiveImageIndex] = useState(0);
+    const [isContacting, startContact] = useTransition();
     const activeImage = book.images[activeImageIndex] || book.images[0];
+
+    const handleContact = () => {
+        startContact(async () => {
+            try {
+                const conversationId = await requestBookContact(book.id);
+                router.push(`/conversation?conversationId=${conversationId}`);
+            } catch (error) {
+                toast.error(error instanceof Error ? error.message : "Không thể liên hệ người bán");
+            }
+        });
+    };
 
     return(
         <main className="container py-4 py-md-5">
@@ -71,6 +87,10 @@ const BookDetail = (props: IProps) => {
                                     </Badge>
                                     <h1 className="h3 fw-bold text-dark mb-3">{book.name}</h1>
                                     <div className="fs-3 fw-bold text-success mb-4">{formatPrice(book.price)}</div>
+                                    <Button variant="success" className="w-100 rounded-3 mb-4" onClick={handleContact} disabled={isContacting}>
+                                        <i className="bi bi-chat-left-text me-2" aria-hidden="true" />
+                                        {isContacting ? "Đang tạo hội thoại..." : "Liên hệ ngay"}
+                                    </Button>
 
                                     <div className="border-top pt-4 mb-4">
                                         <h2 className="h6 fw-bold text-dark mb-2">Mô tả</h2>

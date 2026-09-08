@@ -25,7 +25,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @author ngodo
  */
 @RestController
-@RequestMapping("/ouacademic")
+@RequestMapping("/api")
 public class ApiSubjectController {
 
     @Autowired
@@ -66,7 +66,7 @@ public class ApiSubjectController {
         }
     }
 
-    @PostMapping("/subject")
+    @PostMapping("/admin/subject")
     @PreAuthorize("hasRole('ADMIN')")
     ResponseEntity<ResponseObjectDTO> create(@RequestBody Map<String, String> data) {
         try {
@@ -102,7 +102,7 @@ public class ApiSubjectController {
         }
     }
 
-    @DeleteMapping("/subjects/{subjectId}")
+    @DeleteMapping("/admin/subjects/{subjectId}")
     @PreAuthorize("hasRole('ADMIN')")
     ResponseEntity<ResponseObjectDTO> delete(@PathVariable(name = "subjectId") int subjectId) {
         try {

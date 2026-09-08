@@ -38,6 +38,7 @@ public class ConversationServiceImpl implements ConversationService{
     
     private ResponseUserDTO toUserDTO(User u) {
         ResponseUserDTO dto = new ResponseUserDTO();
+        dto.setId(u.getId());
         dto.setName(u.getName());
         dto.setUsername(u.getUsername());
         dto.setEmail(u.getEmail());

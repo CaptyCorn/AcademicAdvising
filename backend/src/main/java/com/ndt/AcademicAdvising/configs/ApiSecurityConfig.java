@@ -32,11 +32,12 @@ public class ApiSecurityConfig {
     @Bean
     public SecurityFilterChain apiFilterChain (HttpSecurity http) {
         http
-            .securityMatcher("/ouacademic/**")
+            .securityMatcher("/api/**")
             .csrf(csrf -> csrf.disable())
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .authorizeHttpRequests((auth) -> auth
-                .requestMatchers("/ouacademic/login", "/ouacademic/register").permitAll()
+                .requestMatchers("/api/login", "/api/register").permitAll()
+                .requestMatchers("/api/admin/**").hasRole("ADMIN")
                 .anyRequest().authenticated()
             )
             .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);

@@ -39,7 +39,7 @@ public class Conversation {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Integer id;
-    @Column(name = "last_message", length = 500)
+    @Column(name = "last_message", columnDefinition = "TEXT")
     private String lastMessage;
     @UpdateTimestamp
     @Column(name = "last_message_time")
@@ -61,7 +61,10 @@ public class Conversation {
     @JoinColumn(name = "last_sender_id", referencedColumnName = "id")
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     private User lastSender;
+    
     @OneToMany(cascade = CascadeType.REMOVE, mappedBy = "conversation")
     private Set<Message> messages;
-
+    
+    @OneToMany(mappedBy = "conversation",cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<ConversationBook> conversationBooks;
 }

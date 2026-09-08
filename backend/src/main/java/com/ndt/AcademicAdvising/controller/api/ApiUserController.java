@@ -32,7 +32,7 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @Controller
 @RestController
-@RequestMapping("/ouacademic")
+@RequestMapping("/api")
 public class ApiUserController {
 
     @Autowired

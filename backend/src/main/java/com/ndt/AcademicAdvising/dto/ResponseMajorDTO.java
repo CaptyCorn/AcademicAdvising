@@ -4,6 +4,7 @@
  */
 package com.ndt.AcademicAdvising.dto;
 
+import java.util.Date;
 import lombok.Data;
 
 /**
@@ -14,4 +15,5 @@ import lombok.Data;
 public class ResponseMajorDTO {
     private int id;
     private String name;
+    private Date createdAt;
 }
