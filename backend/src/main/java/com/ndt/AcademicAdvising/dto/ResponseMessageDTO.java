@@ -4,6 +4,7 @@
  */
 package com.ndt.AcademicAdvising.dto;
 
+import com.ndt.AcademicAdvising.enums.MessageType;
 import java.util.Date;
 import lombok.Data;
 
@@ -17,5 +18,7 @@ public class ResponseMessageDTO {
     private String content;
     private Date createdAt;
     private Integer conversationId;
+    private MessageType messageType;
     private ResponseUserDTO sender;
+    private ResponseBookDTO book;
 }

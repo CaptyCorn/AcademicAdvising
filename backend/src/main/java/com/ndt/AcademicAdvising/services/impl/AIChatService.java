@@ -7,6 +7,7 @@ package com.ndt.AcademicAdvising.services.impl;
 import com.ndt.AcademicAdvising.dto.RequestAIChatDTO;
 import com.ndt.AcademicAdvising.dto.ResponseMessageDTO;
 import com.ndt.AcademicAdvising.dto.ResponseUserDTO;
+import com.ndt.AcademicAdvising.enums.MessageType;
 import com.ndt.AcademicAdvising.enums.UserRole;
 import com.ndt.AcademicAdvising.pojo.Conversation;
 import com.ndt.AcademicAdvising.pojo.Message;
@@ -105,6 +106,7 @@ public class AIChatService {
         Message userMessage = new Message();
         userMessage.setContent(request.getContent());
         userMessage.setSender(currentUser);
+        userMessage.setMessageType(MessageType.TEXT);
         userMessage.setConversation(conversation);
 
         Message savedUserMessage = this.messageRepo.save(userMessage);
@@ -119,6 +121,7 @@ public class AIChatService {
         Message aiMessage = new Message();
         aiMessage.setContent(answer);
         aiMessage.setSender(ai);
+        aiMessage.setMessageType(MessageType.TEXT);
         aiMessage.setConversation(conversation);
 
         Message savedAIMessage = messageRepo.save(aiMessage);

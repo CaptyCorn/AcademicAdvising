@@ -6,12 +6,14 @@ package com.ndt.AcademicAdvising.controller.api;
 
 import com.ndt.AcademicAdvising.dto.RequestBookDTO;
 import com.ndt.AcademicAdvising.dto.ResponseObjectDTO;
+import com.ndt.AcademicAdvising.services.BookContactService;
 import com.ndt.AcademicAdvising.services.BookService;
 import jakarta.validation.Valid;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -31,6 +33,24 @@ public class ApiBookController {
 
     @Autowired
     private BookService bookService;
+    
+    @Autowired
+    private BookContactService bookContactService;
+    
+    @PostMapping("/books/{bookId}/contact")
+    public ResponseEntity<Integer> contactSeller(
+            @PathVariable Integer bookId,
+            Authentication authentication
+    ) {
+
+        Integer conversationId =
+                bookContactService.contactSeller(
+                        bookId,
+                        authentication.getName()
+                );
+
+        return ResponseEntity.ok(conversationId);
+    }
 
     @GetMapping("/books")
     ResponseEntity<ResponseObjectDTO> list(@RequestParam Map<String, String> params) {
