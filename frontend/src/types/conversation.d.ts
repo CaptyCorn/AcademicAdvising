@@ -17,8 +17,15 @@ interface IConversation {
 
 interface IMessage {
     id: number | string,
-    content: string,
+    content?: string,
     createdAt?: Date,
     conversationId?: number,
-    sender?: IConversationUser
+    sender?: IConversationUser,
+    messageType?: "TEXT" | "BOOK" | string,
+    book?: {
+        id: number,
+        name: string,
+        price: number,
+        image?: IImage
+    }
 }

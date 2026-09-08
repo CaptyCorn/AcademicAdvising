@@ -29,3 +29,18 @@ export const requestListBook = async (params: IBookQuery = {}): Promise<IPageRes
 	const responseInfo = await res.json();
 	return responseInfo.data;
 };
+
+export const requestBookContact = async (bookId: number): Promise<number> => {
+	const token = (await cookies()).get('token')?.value;
+	const res = await fetch(`${callAPI(endpoints['contactBook'](String(bookId)))}`, {
+		method: 'POST',
+		headers: {
+			'Content-Type': 'application/json',
+			'Authorization': `Bearer ${token}`
+		}
+	});
+
+	if (!res.ok) throw new Error('Không thể tạo cuộc hội thoại với người bán');
+
+	return await res.json();
+};

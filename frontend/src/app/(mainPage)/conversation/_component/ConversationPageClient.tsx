@@ -2,6 +2,7 @@
 
 import { AuthContext } from "@/app/_context/AuthContext";
 import { Client, type IMessage as StompMessage, type StompSubscription } from "@stomp/stompjs";
+import Link from "next/link";
 import moment from "moment";
 import "../../../../../node_modules/moment/locale/vi";
 import { use, useEffect, useRef, useState, type UIEvent } from "react";
@@ -10,6 +11,7 @@ import { toast } from "react-toastify";
 
 interface IProps {
     initialConversations: IConversation[],
+    initialConversationId: number | null,
     loadConversations: (page?: number) => Promise<IPageResponse<IConversation>>,
     loadMessages: (conversationId: number, page?: number) => Promise<IPageResponse<IMessage>>
 }
@@ -39,11 +41,22 @@ const getConversationName = (conversation: IConversation, username?: string) => 
     return otherUser?.name || otherUser?.username || "Hội thoại";
 };
 
+const getConversationPeer = (conversation: IConversation, username?: string) => [conversation.sender, conversation.receiver]
+    .filter(Boolean)
+    .find((participant) => participant?.username !== username);
+
+const isAIUsername = (username?: string) => ["aiagent", "ai_agent", "ai", "ROLE_AI"].includes((username || "").toLowerCase());
+
+const formatBookPrice = (price: number) => new Intl.NumberFormat("vi-VN", {
+    style: "currency",
+    currency: "VND"
+}).format(price);
+
 const ConversationPageClient = (props: IProps) => {
-    const { initialConversations, loadConversations, loadMessages } = props;
+    const { initialConversations, initialConversationId, loadConversations, loadMessages } = props;
     const { token, user } = use(AuthContext);
     const [conversations, setConversations] = useState(initialConversations);
-    const [selectedConversationId, setSelectedConversationId] = useState<number | null>(null);
+    const [selectedConversationId, setSelectedConversationId] = useState<number | null>(initialConversationId);
     const [messages, setMessages] = useState<IMessage[]>([]);
     const [messageContent, setMessageContent] = useState("");
     const [messagesLoading, setMessagesLoading] = useState(false);
@@ -54,6 +67,8 @@ const ConversationPageClient = (props: IProps) => {
     const [socketState, setSocketState] = useState<SocketState>("offline");
     const stompClientRef = useRef<Client | null>(null);
     const subscriptionRef = useRef<StompSubscription | null>(null);
+    const userSubscriptionRef = useRef<StompSubscription | null>(null);
+    const selectedConversationRef = useRef<number | null>(initialConversationId);
     const messageLoadingRef = useRef(false);
     const messageCacheRef = useRef<Map<number, IMessageCache>>(new Map());
     const scrollToBottomRef = useRef(true);
@@ -73,6 +88,7 @@ const ConversationPageClient = (props: IProps) => {
                 setSocketState("connected");
                 subscriptionRef.current = client.subscribe("/user/queue/ai", (frame: StompMessage) => {
                     const response = JSON.parse(frame.body) as IMessage;
+                    selectedConversationRef.current = response.conversationId ?? null;
                     setSelectedConversationId(response.conversationId ?? null);
                     setSending(false);
                     scrollToBottomRef.current = true;
@@ -98,6 +114,31 @@ const ConversationPageClient = (props: IProps) => {
                         .then((result) => setConversations(result.content))
                         .catch(() => undefined);
                 });
+                userSubscriptionRef.current = client.subscribe("/user/queue/messages", (frame: StompMessage) => {
+                    const response = JSON.parse(frame.body) as IMessage;
+                    if (response.conversationId === selectedConversationRef.current) {
+                        scrollToBottomRef.current = true;
+                        setMessages((currentMessages) => {
+                            const withoutOptimisticMessage = currentMessages.filter((message) => {
+                                const isOptimistic = typeof message.id === "string" && message.id.startsWith("local-");
+                                return !(isOptimistic && message.content === response.content);
+                            });
+                            const updatedMessages = [...withoutOptimisticMessage, response];
+                            const cachedMessages = messageCacheRef.current.get(response.conversationId!);
+                            if (cachedMessages) {
+                                messageCacheRef.current.set(response.conversationId!, {
+                                    ...cachedMessages,
+                                    messages: updatedMessages
+                                });
+                            }
+                            return updatedMessages;
+                        });
+                    }
+                    setSending(false);
+                    void loadConversations(0)
+                        .then((result) => setConversations(result.content))
+                        .catch(() => undefined);
+                });
             },
             onDisconnect: () => setSocketState("offline"),
             onStompError: () => {
@@ -117,6 +158,8 @@ const ConversationPageClient = (props: IProps) => {
         return () => {
             subscriptionRef.current?.unsubscribe();
             subscriptionRef.current = null;
+            userSubscriptionRef.current?.unsubscribe();
+            userSubscriptionRef.current = null;
             stompClientRef.current = null;
             void client.deactivate();
         };
@@ -130,6 +173,7 @@ const ConversationPageClient = (props: IProps) => {
     }, [messages]);
 
     const handleSelectConversation = async (conversationId: number) => {
+        selectedConversationRef.current = conversationId;
         setSelectedConversationId(conversationId);
 
         const cachedMessages = messageCacheRef.current.get(conversationId);
@@ -164,7 +208,37 @@ const ConversationPageClient = (props: IProps) => {
         }
     };
 
+    useEffect(() => {
+        if (initialConversationId === null) return;
+
+        const cachedMessages = messageCacheRef.current.get(initialConversationId);
+        if (cachedMessages) {
+            setMessages(cachedMessages.messages);
+            setMessagePage(cachedMessages.page);
+            setMessageTotalPages(cachedMessages.totalPages);
+            return;
+        }
+
+        setMessagesLoading(true);
+        void loadMessages(initialConversationId, 0)
+            .then((result) => {
+                const orderedMessages = toChatOrder(result.content);
+                scrollToBottomRef.current = true;
+                setMessages(orderedMessages);
+                setMessagePage(result.page);
+                setMessageTotalPages(result.totalPages);
+                messageCacheRef.current.set(initialConversationId, {
+                    messages: orderedMessages,
+                    page: result.page,
+                    totalPages: result.totalPages
+                });
+            })
+            .catch(() => toast.error("Không thể tải tin nhắn"))
+            .finally(() => setMessagesLoading(false));
+    }, [initialConversationId, loadMessages]);
+
     const handleNewChat = () => {
+        selectedConversationRef.current = null;
         setSelectedConversationId(null);
         setMessages([]);
         setMessagePage(0);
@@ -214,9 +288,16 @@ const ConversationPageClient = (props: IProps) => {
     const handleSend = () => {
         const content = messageContent.trim();
         const client = stompClientRef.current;
+        const selectedConversation = conversations.find((conversation) => conversation.id === selectedConversationId);
+        const peer = selectedConversation ? getConversationPeer(selectedConversation, user?.username) : undefined;
+        const isAIChat = selectedConversationId === null || isAIUsername(peer?.username);
         if (!content || sending) return;
         if (!client?.connected) {
             toast.warning("Chatbot đang kết nối, vui lòng thử lại sau giây lát");
+            return;
+        }
+        if (!isAIChat && !peer?.id) {
+            toast.error("Không xác định được người nhận");
             return;
         }
 
@@ -245,9 +326,13 @@ const ConversationPageClient = (props: IProps) => {
         setMessageContent("");
         setSending(true);
         client.publish({
-            destination: "/app/ai/chat",
-            body: JSON.stringify({
+            destination: isAIChat ? "/app/ai/chat" : "/app/chat",
+            body: JSON.stringify(isAIChat ? {
                 conversationId: selectedConversationId,
+                content
+            } : {
+                conversationId: selectedConversationId,
+                receiverId: peer?.id,
                 content
             })
         });
@@ -345,12 +430,30 @@ const ConversationPageClient = (props: IProps) => {
                                 {messageLoadingMore && <div className="d-flex justify-content-center"><Spinner animation="border" size="sm" variant="success" /></div>}
                                 {messages.map((message) => {
                                     const isMine = message.sender?.username === user?.username;
+                                    const bookMessage = message.messageType === "BOOK" ? message.book : undefined;
                                     return (
                                         <div key={message.id} className={`d-flex ${isMine ? "justify-content-end" : "justify-content-start"}`}>
                                             <div className={`d-flex align-items-end gap-2 ${isMine ? "flex-row-reverse" : ""}`} style={{ maxWidth: "min(80%, 680px)" }}>
                                                 {!isMine && <span className="d-flex align-items-center justify-content-center flex-shrink-0 rounded-circle bg-success-subtle text-success" style={{ width: "32px", height: "32px" }}><i className="bi bi-robot" aria-hidden="true" /></span>}
                                                 <div className={`rounded-4 px-3 py-2 ${isMine ? "bg-success text-white rounded-bottom-0" : "bg-white border text-dark rounded-bottom-0 shadow-sm"}`}>
-                                                    <p className="mb-1 text-break" style={{ whiteSpace: "pre-wrap" }}>{message.content}</p>
+                                                    {bookMessage ? (
+                                                        <Link href={`/book-exchange/${bookMessage.id}`} className="d-flex align-items-center gap-3 text-reset text-decoration-none">
+                                                            <Image
+                                                                src={bookMessage.image?.imageUrl || "/file.svg"}
+                                                                alt={bookMessage.name}
+                                                                width={64}
+                                                                height={64}
+                                                                className="rounded-3 object-fit-cover flex-shrink-0"
+                                                            />
+                                                            <span>
+                                                                <strong className="d-block">{bookMessage.name}</strong>
+                                                                <small className="d-block opacity-75">{formatBookPrice(bookMessage.price)}</small>
+                                                                <small className="d-block mt-1 text-decoration-underline">Xem sách</small>
+                                                            </span>
+                                                        </Link>
+                                                    ) : (
+                                                        <p className="mb-1 text-break" style={{ whiteSpace: "pre-wrap" }}>{message.content}</p>
+                                                    )}
                                                     <small className={isMine ? "text-white-50" : "text-secondary"}>{formatTime(message.createdAt)}</small>
                                                 </div>
                                             </div>

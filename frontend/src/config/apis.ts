@@ -20,6 +20,7 @@ export const endpoints = {
 
     'listbook': '/books',
     'bookDetail': (bookId: string) => `/books/${bookId}`,
+    'contactBook': (bookId: string) => `/books/${bookId}/contact`,
     'createBook': '/books',
     'deleteBook': (bookId: string) => `/books/${bookId}`,
     'bookUser': '/books/user',
