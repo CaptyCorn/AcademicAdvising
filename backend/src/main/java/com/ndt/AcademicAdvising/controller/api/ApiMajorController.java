@@ -25,7 +25,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @author ngodo
  */
 @RestController
-@RequestMapping("ouacademic")
+@RequestMapping("/api")
 public class ApiMajorController {
 
     @Autowired
@@ -64,7 +64,7 @@ public class ApiMajorController {
         }
     }
 
-    @PostMapping("/major")
+    @PostMapping("/admin/major")
     @PreAuthorize("hasRole('ADMIN')")
     ResponseEntity<ResponseObjectDTO> insert(@RequestBody Map<String, String> p) {
         String name = p.get("name");
@@ -101,7 +101,7 @@ public class ApiMajorController {
         }
     }
 
-    @DeleteMapping("/majors/{majorId}")
+    @DeleteMapping("/admin/majors/{majorId}")
     @PreAuthorize("hasRole('ADMIN')")
     ResponseEntity<ResponseObjectDTO> delete(@PathVariable(name = "majorId") int majorId) {
         try {
