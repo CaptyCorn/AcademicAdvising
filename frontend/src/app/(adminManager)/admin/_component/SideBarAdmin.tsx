@@ -11,10 +11,10 @@ interface IAdminLink {
 }
 
 const dataLinks: IAdminLink[] = [
-    { href: "/admin/majors", label: "Quản lí ngành học", icon: "bi-diagram-3" },
-    { href: "/admin/subjects", label: "Quản lí môn học", icon: "bi-journal-text" },
-    { href: "/admin/books", label: "Quản lí sách", icon: "bi-book" },
-    { href: "/admin/users", label: "Quản lí người dùng", icon: "bi-people" },
+    { href: "/admin/majorManagement", label: "Quản lí ngành học", icon: "bi-diagram-3" },
+    { href: "/admin/subjectManagement", label: "Quản lí môn học", icon: "bi-journal-text" },
+    { href: "/admin/bookManagement", label: "Quản lí sách", icon: "bi-book" },
+    { href: "/admin/userManagement", label: "Quản lí người dùng", icon: "bi-people" },
     // { href: "/admin/ai-documents", label: "Quản lí tài liệu AI", icon: "bi-file-earmark-text" }
 ];
 
