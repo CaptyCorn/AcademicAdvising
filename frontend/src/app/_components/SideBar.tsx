@@ -16,12 +16,9 @@ const mainItems: { href: string; label: string; icon: IconName }[] = [
 	{ href: "/", label: "Dành cho bạn", icon: "home" },
 	{ href: "/new-post", label: "Bài đăng mới", icon: "plus" },
 	{ href: "/search", label: "Tìm kiếm", icon: "search" },
-	// { href: "/appointments", label: "Lịch tư vấn", icon: "calendar" },
 	{ href: "/conversation", label: "Tin nhắn", icon: "chat" },
 	{ href: "/activity", label: "Hoạt động", icon: "heart" },
 	{ href: "/profile", label: "Trang cá nhân", icon: "user" },
-	// { href: "/academic-results", label: "Thông tin chi tiết", icon: "chart" },
-	// { href: "/saved", label: "Đã lưu", icon: "bookmark" },
 ];
 
 const Icon = ({ name }: { name: IconName }) => {
@@ -52,6 +49,7 @@ const SideBar = () => {
 	const [isMoreOpen, setIsMoreOpen] = useState(false);
 	const [isLoggingOut, startLogout] = useTransition();
 	const isActive = (href: string) => href === "/" ? pathname === "/" : pathname.startsWith(href);
+	const isAdmin = ["ROLE_ADMIN", "ADMIN"].includes(user?.role?.toUpperCase() || "");
 
 	useEffect(() => {
 		const mediaQuery = window.matchMedia("(max-width: 991.98px)");
@@ -100,11 +98,7 @@ const SideBar = () => {
 				))}
 
 				<div className="border-top my-3" />
-				{/* <div className="d-flex justify-content-between px-3 mb-2 small text-secondary">
-					<span className={styles.sectionLabel}>Bảng feed</span>
-					<span className={styles.sectionLabel}>Chỉnh sửa</span>
-				</div> */}
-				{/* <Link href="/following" className={`nav-link px-3 py-2 rounded-3 text-dark ${styles.navItem}`}><span className={styles.navLabel}>Đang theo dõi</span></Link> */}
+
 				<Link href="/self-posts" className={`nav-link d-flex align-items-center gap-3 px-3 py-2 rounded-3 text-dark ${styles.navItem}`}>
 					<Icon name="book" />
 					<span className={styles.navLabel}>Bài viết tự tạo</span>
@@ -115,6 +109,12 @@ const SideBar = () => {
 				</Link>
 				<div className="border-top my-3" />
 
+				{isAdmin && (
+					<Link href="/admin" className={`nav-link d-flex align-items-center gap-3 px-3 py-2 rounded-3 text-dark ${styles.navItem}`}>
+						<Icon name="chart" />
+						<span className={styles.navLabel}>Trang quản trị</span>
+					</Link>
+				)}
 			</nav>
 
 			<div className="d-flex align-items-center gap-2 p-2 mb-2">

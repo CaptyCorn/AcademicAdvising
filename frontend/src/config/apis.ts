@@ -11,18 +11,21 @@ export const endpoints = {
     'createComment': (postId: string) => `/posts/${postId}/comment`, 
 
     'listMajor': '/majors',
-    'createMajor': '/major',
-    'deleteMajor': (majorId: string) => `/majors/${majorId}`,
+    'createMajor': '/admin/major',
+    'deleteMajor': (majorId: string) => `/admin/majors/${majorId}`,
 
     'listSubject': '/subjects',
-    'createSubject': '/subject',
-    'deleteSubject': (subjectId: string) => `/subjects/${subjectId}`,
+    'createSubject': '/admin/subject',
+    'deleteSubject': (subjectId: string) => `/admin/subjects/${subjectId}`,
 
     'listbook': '/books',
     'bookDetail': (bookId: string) => `/books/${bookId}`,
     'createBook': '/books',
     'deleteBook': (bookId: string) => `/books/${bookId}`,
     'bookUser': '/books/user',
+
+    'adminDashboard': '/admin/dashboard',
+    'adminRevenue': '/admin/revenue',
 
     'listConversation': '/conversations',
     'listMessage': (conversationId: string) => `/conversations/${conversationId}/messages`,
