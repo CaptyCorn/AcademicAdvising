@@ -5,6 +5,7 @@
 package com.ndt.AcademicAdvising.controller.api;
 
 import com.ndt.AcademicAdvising.dto.RequestBookDTO;
+import com.ndt.AcademicAdvising.dto.RequestBookStatusDTO;
 import com.ndt.AcademicAdvising.dto.ResponseObjectDTO;
 import com.ndt.AcademicAdvising.services.BookContactService;
 import com.ndt.AcademicAdvising.services.BookService;
@@ -17,8 +18,10 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -33,18 +36,18 @@ public class ApiBookController {
 
     @Autowired
     private BookService bookService;
-    
+
     @Autowired
     private BookContactService bookContactService;
-    
+
     @PostMapping("/books/{bookId}/contact")
     public ResponseEntity<Integer> contactSeller(
             @PathVariable Integer bookId,
             Authentication authentication
     ) {
 
-        Integer conversationId =
-                bookContactService.contactSeller(
+        Integer conversationId
+                = bookContactService.contactSeller(
                         bookId,
                         authentication.getName()
                 );
@@ -229,6 +232,50 @@ public class ApiBookController {
                                     500,
                                     "Lỗi hệ thống",
                                     null)
+                    );
+        }
+    }
+
+    @PatchMapping("/books/{bookId}/status")
+    public ResponseEntity<ResponseObjectDTO> updateStatus(
+            @PathVariable int bookId,
+            @Valid @RequestBody RequestBookStatusDTO request,
+            Authentication authentication) {
+
+        try {
+            return ResponseEntity.ok(
+                    new ResponseObjectDTO(
+                            Boolean.TRUE,
+                            200,
+                            "Cập nhật trạng thái sách thành công",
+                            this.bookService.updateBookStatus(
+                                    bookId,
+                                    request,
+                                    authentication.getName()
+                            )
+                    )
+            );
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity
+                    .status(HttpStatus.BAD_REQUEST)
+                    .body(
+                            new ResponseObjectDTO(
+                                    Boolean.FALSE,
+                                    400,
+                                    e.getMessage(),
+                                    null
+                            )
+                    );
+        } catch (Exception e) {
+            return ResponseEntity
+                    .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(
+                            new ResponseObjectDTO(
+                                    Boolean.FALSE,
+                                    500,
+                                    "Lỗi hệ thống",
+                                    null
+                            )
                     );
         }
     }

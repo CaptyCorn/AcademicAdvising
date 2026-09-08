@@ -6,6 +6,7 @@ package com.ndt.AcademicAdvising.services;
 
 import com.ndt.AcademicAdvising.dto.PageResponseDTO;
 import com.ndt.AcademicAdvising.dto.RequestBookDTO;
+import com.ndt.AcademicAdvising.dto.RequestBookStatusDTO;
 import com.ndt.AcademicAdvising.dto.ResponseBookCreateDTO;
 import com.ndt.AcademicAdvising.dto.ResponseBookDTO;
 import com.ndt.AcademicAdvising.dto.ResponseBookDetailDTO;
@@ -21,4 +22,5 @@ public interface BookService {
     ResponseBookCreateDTO createBook(RequestBookDTO dto);
     void deleteBook(int bookId);
     ResponseBookDetailDTO getBookId(int bookId);
+    ResponseBookDTO updateBookStatus(int bookId, RequestBookStatusDTO request, String username);
 }

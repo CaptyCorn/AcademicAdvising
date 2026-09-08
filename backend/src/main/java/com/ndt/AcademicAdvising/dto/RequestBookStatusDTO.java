@@ -4,9 +4,8 @@
  */
 package com.ndt.AcademicAdvising.dto;
 
-import com.ndt.AcademicAdvising.enums.BookCondition;
 import com.ndt.AcademicAdvising.enums.BookStatus;
-import java.util.Date;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
 /**
@@ -14,12 +13,7 @@ import lombok.Data;
  * @author ngodo
  */
 @Data
-public class ResponseBookDTO {
-    private int id;
-    private String name;
-    private double price;
-    private BookCondition condition;
+public class RequestBookStatusDTO {
+    @NotNull(message = "Trạng thái sách không được để trống.")
     private BookStatus status;
-    private ResponseBookIImgDTO image;
-    private Date createdAt;
 }

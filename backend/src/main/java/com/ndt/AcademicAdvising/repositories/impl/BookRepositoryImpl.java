@@ -112,7 +112,7 @@ public class BookRepositoryImpl implements CustomBookRepository{
         Root root = query.from(Book.class);
         
         query.select(root).distinct(true);
-        query.orderBy(builder.asc(root.get("id")));
+        query.orderBy(builder.desc(root.get("createdAt")));
         
         List<Predicate> predicates = buildPredicate(builder, root, params);
         predicates.add(builder.equal(root.get("user").get("id"), userId));
