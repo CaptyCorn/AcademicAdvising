@@ -61,7 +61,10 @@ public class Conversation {
     @JoinColumn(name = "last_sender_id", referencedColumnName = "id")
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     private User lastSender;
+    
     @OneToMany(cascade = CascadeType.REMOVE, mappedBy = "conversation")
     private Set<Message> messages;
-
+    
+    @OneToMany(mappedBy = "conversation",cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<ConversationBook> conversationBooks;
 }

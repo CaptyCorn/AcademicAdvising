@@ -4,11 +4,8 @@
  */
 package com.ndt.AcademicAdvising.pojo;
 
-import com.ndt.AcademicAdvising.enums.MessageType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -16,6 +13,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 import java.util.Date;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -28,35 +26,34 @@ import org.hibernate.annotations.UpdateTimestamp;
  *
  * @author ngodo
  */
-
 @Entity
-@Table(name = "tbl_message")
+@Table(
+    name = "tbl_conversation_book",
+    uniqueConstraints = {
+        @UniqueConstraint(
+            name = "uk_conversation_book",
+            columnNames = {"conversation_id", "book_id"}
+        )
+    }
+)
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class Message {
+public class ConversationBook {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Integer id;
-    @Column(columnDefinition = "TEXT")
-    private String content;
-    @Enumerated(EnumType.STRING)
-    @Column(name = "message_type", nullable = false)
-    private MessageType messageType;
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "conversation_id", nullable = false)
+    private Conversation conversation;
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "book_id", nullable = false)
+    private Book book;
     @CreationTimestamp
     @Column(name = "created_at", updatable = false)
     private Date createdAt;
     @UpdateTimestamp
     @Column(name = "updated_at")
     private Date updatedAt;
-    @JoinColumn(name = "conversation_id", referencedColumnName = "id")
-    @ManyToOne(optional = false, fetch = FetchType.LAZY)
-    private Conversation conversation;
-    @JoinColumn(name = "sender_id", referencedColumnName = "id")
-    @ManyToOne(optional = false, fetch = FetchType.LAZY)
-    private User sender;
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "book_id")
-    private Book book;
 }
