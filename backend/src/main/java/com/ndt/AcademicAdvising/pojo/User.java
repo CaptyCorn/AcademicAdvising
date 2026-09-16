@@ -73,11 +73,6 @@ public class User implements Serializable {
     @OneToMany(cascade = CascadeType.REMOVE, mappedBy = "user")
     private Set<Book> books;
 
-    @OneToMany(mappedBy = "buyer")
-    private Set<Payment> buyingPayments;
-    @OneToMany(mappedBy = "seller")
-    private Set<Payment> sellingPayments;
-
     @OneToMany(cascade = CascadeType.REMOVE, mappedBy = "sender")
     private Set<Notification> sendingNotifications;
     @OneToMany(cascade = CascadeType.REMOVE, mappedBy = "receiver")

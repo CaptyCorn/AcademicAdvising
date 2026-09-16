@@ -338,6 +338,12 @@ const ConversationPageClient = (props: IProps) => {
         });
     };
 
+    const activeConversation = conversations.find((conversation) => conversation.id === selectedConversationId);
+    const activePeer = activeConversation ? getConversationPeer(activeConversation, user?.username) : undefined;
+    const activeIsAI = selectedConversationId === null || isAIUsername(activePeer?.username);
+    const activeName = activeIsAI ? "Trợ lý học vụ AI" : activePeer?.name || activePeer?.username || "Hội thoại";
+    const activeAvatar = activeIsAI ? activePeer?.avatar : activePeer?.avatar;
+
     return (
         <main className="container-fluid py-3 py-md-4">
             <div className="row g-0 mx-auto overflow-hidden rounded-4 border bg-white shadow-sm" style={{ height: "calc(100dvh - 3rem)", maxWidth: "1280px" }}>
@@ -398,11 +404,15 @@ const ConversationPageClient = (props: IProps) => {
                 <section className="col-12 col-md-8 col-lg-9 d-flex h-100 flex-column bg-white">
                     <header className="d-flex align-items-center justify-content-between gap-3 border-bottom p-3">
                         <div className="d-flex align-items-center gap-3">
-                            <span className="d-flex align-items-center justify-content-center rounded-circle bg-success-subtle text-success" style={{ width: "42px", height: "42px" }}>
-                                <i className="bi bi-robot fs-5" aria-hidden="true" />
-                            </span>
+                            {activeAvatar ? (
+                                <Image src={activeAvatar} alt="" width={42} height={42} roundedCircle className="flex-shrink-0" />
+                            ) : (
+                                <span className="d-flex align-items-center justify-content-center rounded-circle bg-success-subtle text-success" style={{ width: "42px", height: "42px" }}>
+                                    <i className={`bi ${activeIsAI ? "bi-robot" : "bi-person"} fs-5`} aria-hidden="true" />
+                                </span>
+                            )}
                             <div>
-                                <h2 className="h6 mb-1 fw-bold">Trợ lý học vụ AI</h2>
+                                <h2 className="h6 mb-1 fw-bold">{activeName}</h2>
                                 <small className="text-secondary">
                                     <span className={`d-inline-block rounded-circle me-1 bg-${socketState === "connected" ? "success" : "secondary"}`} style={{ width: "7px", height: "7px" }} />
                                     {socketState === "connected" ? "Đang trực tuyến" : token ? "Đang kết nối..." : "Ngoại tuyến"}
