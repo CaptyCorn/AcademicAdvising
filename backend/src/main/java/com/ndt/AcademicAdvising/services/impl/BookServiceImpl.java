@@ -6,7 +6,9 @@ package com.ndt.AcademicAdvising.services.impl;
 
 import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
+import com.ndt.AcademicAdvising.dto.PageResponseDTO;
 import com.ndt.AcademicAdvising.dto.RequestBookDTO;
+import com.ndt.AcademicAdvising.dto.RequestBookStatusDTO;
 import com.ndt.AcademicAdvising.dto.ResponseBookCreateDTO;
 import com.ndt.AcademicAdvising.dto.ResponseBookDTO;
 import com.ndt.AcademicAdvising.dto.ResponseBookDetailDTO;
@@ -39,22 +41,23 @@ import org.springframework.web.multipart.MultipartFile;
  * @author ngodo
  */
 @Service
-public class BookServiceImpl implements BookService{
-    
+public class BookServiceImpl implements BookService {
+
     @Autowired
     private BookRepository bookRepo;
-    
+
     @Autowired
     private BookImageRepository bookImgRepo;
-    
-    @Autowired SubjectRepository subjectRepo;
-    
+
+    @Autowired
+    SubjectRepository subjectRepo;
+
     @Autowired
     private UserRepository userRepo;
-    
+
     @Autowired
     private Cloudinary cloudinary;
-    
+
     private ResponseBookIImgDTO toDTOImg(BookImage bookImg) {
         ResponseBookIImgDTO dto = new ResponseBookIImgDTO();
         dto.setId(bookImg.getId());
@@ -62,14 +65,14 @@ public class BookServiceImpl implements BookService{
         dto.setCreatedAt(bookImg.getCreatedAt());
         return dto;
     }
-    
+
     private ResponseSubjectBookDTO toDTOSubject(Subject s) {
         ResponseSubjectBookDTO dto = new ResponseSubjectBookDTO();
         dto.setId(s.getId());
         dto.setName(s.getName());
         return dto;
     }
-    
+
     private ResponseBookDetailDTO toDTODetail(Book b) {
         ResponseBookDetailDTO dto = new ResponseBookDetailDTO();
         dto.setId(b.getId());
@@ -81,8 +84,8 @@ public class BookServiceImpl implements BookService{
         dto.setImages(b.getBookImages().stream().map(this::toDTOImg).collect(Collectors.toSet()));
         return dto;
     }
-    
-    private ResponseBookCreateDTO toDTOCreate (Book b) {
+
+    private ResponseBookCreateDTO toDTOCreate(Book b) {
         ResponseBookCreateDTO dto = new ResponseBookCreateDTO();
         dto.setId(b.getId());
         dto.setName(b.getName());
@@ -93,26 +96,37 @@ public class BookServiceImpl implements BookService{
         dto.setCreatedAt(b.getCreatedAt());
         return dto;
     }
-    
-    private ResponseBookDTO toDTO (Book b) {
+
+    private ResponseBookDTO toDTO(Book b) {
         ResponseBookDTO dto = new ResponseBookDTO();
         dto.setId(b.getId());
         dto.setName(b.getName());
         dto.setPrice(b.getPrice());
         dto.setCondition(b.getBookCondition());
+        dto.setStatus(b.getBookStatus()); // Exposing the current book status
         dto.setImage(b.getBookImages().stream().map(this::toDTOImg).findFirst().orElse(null));
         dto.setCreatedAt(b.getCreatedAt());
         return dto;
     }
-    
+
+    private PageResponseDTO<ResponseBookDTO> toPageDTO(Page<ResponseBookDTO> page) {
+        PageResponseDTO<ResponseBookDTO> dto = new PageResponseDTO<>();
+        dto.setContent(page.getContent());
+        dto.setPage(page.getNumber());
+        dto.setSize(page.getSize());
+        dto.setTotalElements(page.getTotalElements());
+        dto.setTotalPages(page.getTotalPages());
+        return dto;
+    }
+
     private User getCurrentUser() {
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
         return this.userRepo.findByUsername(username);
     }
 
     @Override
-    public Page<ResponseBookDTO> getListBook(Map<String, String> params) {
-        return this.bookRepo.getListBook(params).map(this::toDTO);
+    public PageResponseDTO<ResponseBookDTO> getListBook(Map<String, String> params) {
+        return toPageDTO(this.bookRepo.getListBook(params).map(this::toDTO));
     }
 
     @Override
@@ -123,9 +137,9 @@ public class BookServiceImpl implements BookService{
         b.setPrice(dto.getPrice());
         b.setBookCondition(dto.getCondition());
         b.setUser(getCurrentUser());
-        
+
         Set<Subject> subjects = new HashSet<>();
-        
+
         System.out.println("Thêm môn");
         if (dto.getSubjectIds() != null) {
             for (Integer subId : dto.getSubjectIds()) {
@@ -134,13 +148,13 @@ public class BookServiceImpl implements BookService{
                                 () -> new IllegalArgumentException("Môn học id = " + subId + " không có.")
                         );
                 subjects.add(s);
-            }          
+            }
         }
         b.setSubjects(subjects);
         System.out.println("xong Thêm môn");
-        
+
         Set<BookImage> images = new HashSet<>();
-        
+
         System.out.println("Thêm ảnh");
         if (dto.getFiles() != null) {
             for (MultipartFile f : dto.getFiles()) {
@@ -151,25 +165,25 @@ public class BookServiceImpl implements BookService{
                                     "folder", "Academic/BookImage",
                                     "resource_type", "image")
                     );
-                    
+
                     BookImage image = new BookImage();
                     image.setImageUrl(res.get("secure_url").toString());
                     image.setImagePublicId(res.get("public_id").toString());
                     image.setBook(b);
-                    
+
                     images.add(image);
                 } catch (IOException ex) {
                     System.getLogger(BookServiceImpl.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
                 }
-                
+
             }
         }
-        
+
         b.setBookImages(images);
         System.out.println("xong Thêm ảnh");
-        
+
         return toDTOCreate(this.bookRepo.save(b));
-        
+
     }
 
     @Override
@@ -179,7 +193,7 @@ public class BookServiceImpl implements BookService{
         User u = getCurrentUser();
         if (Objects.equals(b.getUser().getId(), u.getId())) {
             List<BookImage> images = this.bookImgRepo.findAllByBookId(bookId);
-            for(BookImage img : images) {
+            for (BookImage img : images) {
                 try {
                     this.cloudinary.uploader().destroy(
                             img.getImagePublicId(),
@@ -189,10 +203,11 @@ public class BookServiceImpl implements BookService{
                     System.getLogger(BookServiceImpl.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
                 }
             }
-            
+
             this.bookRepo.deleteById(bookId);
+        } else {
+            throw new IllegalArgumentException("Không thể xoá sách của người khác");
         }
-        else throw new IllegalArgumentException("Không thể xoá sách của người khác");
     }
 
     @Override
@@ -204,10 +219,42 @@ public class BookServiceImpl implements BookService{
     }
 
     @Override
-    public Page<ResponseBookDTO> getListBookById(Map<String, String> params) {
+    public PageResponseDTO<ResponseBookDTO> getListBookByUserId(Map<String, String> params) {
         User u = getCurrentUser();
-        return this.bookRepo.getListBookById(u.getId(), params).map(this::toDTO);
+        return toPageDTO(this.bookRepo.getListBookById(u.getId(), params).map(this::toDTO));
     }
-    
-    
+
+    @Override
+    public ResponseBookDTO updateBookStatus(int bookId, RequestBookStatusDTO request, String username) {
+
+        if (request == null || request.getStatus() == null) {
+            throw new IllegalArgumentException("Trạng thái sách không được để trống.");
+        }
+
+        Book book = this.bookRepo.findById(bookId)
+                .orElseThrow(
+                        () -> new IllegalArgumentException(
+                                "Sách không tồn tại."
+                        )
+                );
+
+        User currentUser = this.userRepo.findByUsername(username);
+        if (currentUser == null) {
+            throw new IllegalArgumentException("Không tìm thấy người dùng đang đăng nhập.");
+        }
+
+        if (!Objects.equals(
+                book.getUser().getId(),
+                currentUser.getId()
+        )) {
+            throw new IllegalArgumentException(
+                    "Bạn không có quyền thay đổi trạng thái sách này."
+            );
+        }
+
+        book.setBookStatus(request.getStatus());
+
+        return toDTO(this.bookRepo.save(book));
+    }
+
 }

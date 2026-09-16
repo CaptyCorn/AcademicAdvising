@@ -29,7 +29,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @author ngodo
  */
 @RestController
-@RequestMapping("/ouacademic")
+@RequestMapping("/api")
 public class ApiPostController {
 
     @Autowired

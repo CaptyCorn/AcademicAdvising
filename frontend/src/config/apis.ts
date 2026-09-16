@@ -9,6 +9,28 @@ export const endpoints = {
 
     'listComment': (postId: string) => `/posts/${postId}/comments`, 
     'createComment': (postId: string) => `/posts/${postId}/comment`, 
+
+    'listMajor': '/majors',
+    'createMajor': '/admin/major',
+    'deleteMajor': (majorId: string) => `/admin/majors/${majorId}`,
+
+    'listSubject': '/subjects',
+    'createSubject': '/admin/subject',
+    'deleteSubject': (subjectId: string) => `/admin/subjects/${subjectId}`,
+
+    'listbook': '/books',
+    'bookDetail': (bookId: string) => `/books/${bookId}`,
+    'contactBook': (bookId: string) => `/books/${bookId}/contact`,
+    'createBook': '/book',
+    'deleteBook': (bookId: string) => `/books/${bookId}`,
+    'updateBookStatus': (bookId: string) => `/books/${bookId}/status`,
+    'bookUser': '/books/user',
+
+    'adminDashboard': '/admin/dashboard',
+    'adminRevenue': '/admin/revenue',
+
+    'listConversation': '/conversations',
+    'listMessage': (conversationId: string) => `/conversations/${conversationId}/messages`,
 }
 
 export const callAPI = (endpoint: string) => {

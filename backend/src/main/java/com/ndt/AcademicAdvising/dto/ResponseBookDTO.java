@@ -5,6 +5,7 @@
 package com.ndt.AcademicAdvising.dto;
 
 import com.ndt.AcademicAdvising.enums.BookCondition;
+import com.ndt.AcademicAdvising.enums.BookStatus;
 import java.util.Date;
 import lombok.Data;
 
@@ -18,6 +19,7 @@ public class ResponseBookDTO {
     private String name;
     private double price;
     private BookCondition condition;
+    private BookStatus status;
     private ResponseBookIImgDTO image;
     private Date createdAt;
 }

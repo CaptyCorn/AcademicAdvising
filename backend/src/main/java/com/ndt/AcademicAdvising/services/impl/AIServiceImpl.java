@@ -4,6 +4,7 @@
  */
 package com.ndt.AcademicAdvising.services.impl;
 
+import com.ndt.AcademicAdvising.rag.ChatRAGAssistant;
 import com.ndt.AcademicAdvising.rag.RAGAssistant;
 import com.ndt.AcademicAdvising.services.AIService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,9 +18,17 @@ import org.springframework.stereotype.Service;
 public class AIServiceImpl implements AIService{
     @Autowired
     private RAGAssistant ragService;
+    
+    @Autowired
+    private ChatRAGAssistant chatRagService;
 
     @Override
     public String getMessage(String question) {
         return ragService.chat(question);
+    }
+
+    @Override
+    public String chat(int conversationId, String question) {
+        return chatRagService.chat(conversationId, question);
     }
 }

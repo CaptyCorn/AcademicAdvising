@@ -20,4 +20,5 @@ public interface UserService extends UserDetailsService{
     ResponseUserDTO addUser(RequestUserRegisterDTO u);
     ResponseProfileUserDTO getProfile(String username);
     ResponseProfileUserDTO updateUser(String username, RequestUpdateUserDTO userDTO);
+    ResponseUserDTO getUserById(int userId);
 }

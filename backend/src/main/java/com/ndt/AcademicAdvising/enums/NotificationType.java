@@ -10,5 +10,6 @@ package com.ndt.AcademicAdvising.enums;
  */
 public enum NotificationType {
     COMMENT,
-    AI_REPLY
+    AI_REPLY,
+    MESSAGE
 }

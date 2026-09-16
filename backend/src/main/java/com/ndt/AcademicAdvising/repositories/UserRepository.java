@@ -4,6 +4,7 @@
  */
 package com.ndt.AcademicAdvising.repositories;
 
+import com.ndt.AcademicAdvising.enums.UserRole;
 import com.ndt.AcademicAdvising.pojo.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
@@ -13,7 +14,8 @@ import org.springframework.stereotype.Repository;
  * @author ngodo
  */
 @Repository
-public interface UserRepository extends JpaRepository<User, Long>{
+public interface UserRepository extends JpaRepository<User, Integer>{
     User findByUsername(String username);
     Boolean existsByUsername(String username);
+    User findByUserRole(UserRole role);
 }

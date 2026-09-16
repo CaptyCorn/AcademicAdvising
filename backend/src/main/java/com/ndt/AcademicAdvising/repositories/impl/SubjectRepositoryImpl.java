@@ -42,6 +42,7 @@ public class SubjectRepositoryImpl implements CustomSubjectRepository{
         CriteriaQuery<Subject> query = builder.createQuery(Subject.class);
         Root root = query.from(Subject.class);
         query.select(root).distinct(true);
+        query.orderBy(builder.asc(root.get("id")));
         
         List<Predicate> predicates = buildPredicate(builder, root, params);
         
@@ -62,7 +63,7 @@ public class SubjectRepositoryImpl implements CustomSubjectRepository{
         CriteriaQuery<Long> countQuery = builder.createQuery(Long.class);
         Root countRoot = countQuery.from(Subject.class);
         
-        List<Predicate> countPredicates = buildPredicate(builder, root, params);
+        List<Predicate> countPredicates = buildPredicate(builder, countRoot, params);
         
         countQuery.select(builder.countDistinct(countRoot));
         

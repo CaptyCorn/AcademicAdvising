@@ -4,6 +4,7 @@
  */
 package com.ndt.AcademicAdvising.configs;
 
+import com.ndt.AcademicAdvising.rag.ChatRAGAssistant;
 import com.ndt.AcademicAdvising.rag.RAGAssistant;
 import dev.langchain4j.data.segment.TextSegment;
 import dev.langchain4j.memory.chat.MessageWindowChatMemory;
@@ -33,15 +34,16 @@ import org.springframework.context.annotation.Configuration;
  */
 @Configuration
 public class AIConfigs {
+
     @Value("${open.ai.api.key}")
     private String apiKey;
-    
+
     @Value("${spring.datasource.username}")
     private String dbUsername;
-    
+
     @Value("${spring.datasource.password}")
     private String dbPassword;
-    
+
     @Bean
     public EmbeddingStore<TextSegment> embeddingStrore() {
         return PgVectorEmbeddingStore.builder()
@@ -54,7 +56,7 @@ public class AIConfigs {
                 .dimension(embeddingModel().dimension())
                 .build();
     }
-    
+
     @Bean
     public EmbeddingModel embeddingModel() {
         return OpenAiEmbeddingModel.builder()
@@ -62,7 +64,7 @@ public class AIConfigs {
                 .modelName(OpenAiEmbeddingModelName.TEXT_EMBEDDING_3_SMALL)
                 .build();
     }
-    
+
     @Bean
     public ChatModel chatModel() {
         return OpenAiChatModel.builder()
@@ -70,27 +72,54 @@ public class AIConfigs {
                 .modelName(OpenAiChatModelName.GPT_4_1_MINI)
                 .build();
     }
-    
+
     @Bean
     public RAGAssistant ragAssistant() {
         ContentRetriever contentRetriever = EmbeddingStoreContentRetriever.builder()
                 .embeddingModel(embeddingModel())
                 .embeddingStore(embeddingStrore())
+                .maxResults(5)
+                .minScore(0.7)
                 .build();
-        
+
         ContentInjector contentInjector = DefaultContentInjector.builder()
-                .metadataKeysToInclude(Arrays.asList("file_name", "index"))
+                .metadataKeysToInclude(Arrays.asList("file_name", "section", "page", "chunk_index", "document_type"))
                 .build();
-        
+
         RetrievalAugmentor retrievalAugmentor = DefaultRetrievalAugmentor.builder()
                 .contentRetriever(contentRetriever)
                 .contentInjector(contentInjector)
                 .build();
-        
+
         return AiServices.builder(RAGAssistant.class)
                 .chatModel(chatModel())
                 .retrievalAugmentor(retrievalAugmentor)
                 .chatMemoryProvider(memberId -> MessageWindowChatMemory.withMaxMessages(10))
+                .build();
+    }
+
+    @Bean
+    public ChatRAGAssistant chatRagAssistant() {
+
+        ContentRetriever contentRetriever
+                = EmbeddingStoreContentRetriever.builder()
+                        .embeddingModel(embeddingModel())
+                        .embeddingStore(embeddingStrore())
+                        .build();
+
+        ContentInjector contentInjector = DefaultContentInjector.builder()
+                .metadataKeysToInclude(Arrays.asList("file_name", "index"))
+                .build();
+
+        RetrievalAugmentor retrievalAugmentor= DefaultRetrievalAugmentor.builder()
+                .contentRetriever(contentRetriever)
+                .contentInjector(contentInjector)
+                .build();
+
+        return AiServices.builder(ChatRAGAssistant.class)
+                .chatModel(chatModel())
+                .retrievalAugmentor(retrievalAugmentor)
+                .chatMemoryProvider(conversationId -> MessageWindowChatMemory.withMaxMessages(10))
                 .build();
     }
 }
