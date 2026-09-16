@@ -1,7 +1,6 @@
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
 
-const privatePath = ["/"];
 const authPath = ["/login", "/register"];
 
 const redirectToLogin = (request: NextRequest) => {
@@ -29,12 +28,12 @@ export async function proxy(request: NextRequest) {
     const sessionToken = request.cookies.get('token');
     const { pathname } = request.nextUrl;
 
-    if (privatePath.includes(pathname) && !sessionToken) {
-        return redirectToLogin(request);
-    }
-
     if (authPath.includes(pathname) && sessionToken) {
         return NextResponse.redirect(new URL('/', request.url));
+    }
+
+    if (!sessionToken && !authPath.includes(pathname)) {
+        return redirectToLogin(request);
     }
 
     if (pathname.startsWith("/admin")) {
@@ -48,5 +47,5 @@ export async function proxy(request: NextRequest) {
 }
  
 export const config = {
-    matcher: ["/", "/login", "/register", "/admin/:path*"],
+    matcher: ["/((?!api|_next/static|_next/image|favicon.ico).*)"],
 }
