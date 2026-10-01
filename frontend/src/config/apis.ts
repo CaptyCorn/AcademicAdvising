@@ -2,10 +2,12 @@ export const endpoints = {
     'login': '/login',
     'register': '/register',
     'profile': '/profile',
+    'updateProfile': '/profile',
 
     'posts': '/posts',
     'createPost': '/post',
     'postDetail': (postId: string) => `/posts/${postId}`,
+    'myPost': '/posts/me',
 
     'listComment': (postId: string) => `/posts/${postId}/comments`, 
     'createComment': (postId: string) => `/posts/${postId}/comment`, 

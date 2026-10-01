@@ -92,3 +92,28 @@ export const getProfile = async () => {
 export const LogoutAction = async () => {
     (await cookies()).delete("token");
 };
+
+export const updateProfile = async (values: {
+    firstName: string;
+    lastName: string;
+    phone: string;
+    file: File | null;
+}) => {
+    const token = (await cookies()).get("token")?.value;
+    const formData = new FormData();
+    formData.append("firstName", values.firstName);
+    formData.append("lastName", values.lastName);
+    formData.append("phone", values.phone);
+    if (values.file) formData.append("file", values.file);
+
+    const res = await fetch(`${process.env.BASE_URL}/profile`, {
+        method: "PUT",
+        headers: {
+            "Authorization": `Bearer ${token}`
+        },
+        body: formData
+    });
+    const responseInfo = await res.json().catch(() => null);
+    if (!res.ok) return { success: false, message: responseInfo?.message ?? "Không thể cập nhật thông tin cá nhân" };
+    return { success: true, message: responseInfo?.message ?? "Cập nhật thông tin thành công" };
+};

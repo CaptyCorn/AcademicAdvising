@@ -59,8 +59,15 @@ public class PostServiceImpl implements PostService {
     }
 
     private User getCurrentUser() {
+        if (SecurityContextHolder.getContext().getAuthentication() == null) {
+            throw new IllegalArgumentException("Chưa xác thực người dùng.");
+        }
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
-        return this.userRepo.findByUsername(username);
+        User user = this.userRepo.findByUsername(username);
+        if (user == null) {
+            throw new IllegalArgumentException("Không tìm thấy người dùng hiện tại.");
+        }
+        return user;
     }
 
     @Override
@@ -116,12 +123,14 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public Page<ResponsePostDTO> getListPostUser() {
+        public PageResponseDTO<ResponsePostDTO> getListPostUser(Map<String, String> params) {
         User currentUser = getCurrentUser();
-        Pageable pageable = PageRequest.of(0, 10);
-        
-        return this.postRepo.findAllByUserIdOrderByCreatedAtDesc(pageable, currentUser.getId())
-                .map(this::toDTO);
+        Page<ResponsePostDTO> posts = this.postRepo
+            .findAllByUserIdOrderByCreatedAtDesc(
+                PageRequest.of(Integer.parseInt(params.getOrDefault("page", "0")), 5),
+                currentUser.getId())
+            .map(this::toDTO);
+        return toPageDTO(posts);
     }
 
     @Override

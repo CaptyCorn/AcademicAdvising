@@ -24,6 +24,7 @@ import dev.langchain4j.service.AiServices;
 import dev.langchain4j.store.embedding.EmbeddingStore;
 import dev.langchain4j.store.embedding.pgvector.PgVectorEmbeddingStore;
 import java.util.Arrays;
+import javax.sql.DataSource;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -38,20 +39,24 @@ public class AIConfigs {
     @Value("${open.ai.api.key}")
     private String apiKey;
 
-    @Value("${spring.datasource.username}")
-    private String dbUsername;
-
-    @Value("${spring.datasource.password}")
-    private String dbPassword;
-
+//    @Value("${spring.datasource.username}")
+//    private String dbUsername;
+//
+//    @Value("${spring.datasource.password}")
+//    private String dbPassword;
+//    
+//    @Value("${spring.db.host}")
+//    private String dbHost;
+//    
+//    @Value("${spring.database.name}")
+//    private String nameDB;
+//    
+//    @Value("${spring.db.port}")
+//    private Integer dbPort;
     @Bean
-    public EmbeddingStore<TextSegment> embeddingStrore() {
-        return PgVectorEmbeddingStore.builder()
-                .host("localhost")
-                .port(5555)
-                .database("academic")
-                .user(dbUsername)
-                .password(dbPassword)
+    public EmbeddingStore<TextSegment> embeddingStore(DataSource dataSource) {
+        return PgVectorEmbeddingStore.datasourceBuilder()
+                .datasource(dataSource)
                 .table("tbl_document_chunk")
                 .dimension(embeddingModel().dimension())
                 .build();
@@ -74,10 +79,14 @@ public class AIConfigs {
     }
 
     @Bean
-    public RAGAssistant ragAssistant() {
+    public RAGAssistant ragAssistant(
+            EmbeddingStore<TextSegment> embeddingStore,
+            EmbeddingModel embeddingModel,
+            ChatModel chatModel
+    ) {
         ContentRetriever contentRetriever = EmbeddingStoreContentRetriever.builder()
-                .embeddingModel(embeddingModel())
-                .embeddingStore(embeddingStrore())
+                .embeddingModel(embeddingModel)
+                .embeddingStore(embeddingStore)
                 .maxResults(5)
                 .minScore(0.7)
                 .build();
@@ -92,32 +101,36 @@ public class AIConfigs {
                 .build();
 
         return AiServices.builder(RAGAssistant.class)
-                .chatModel(chatModel())
+                .chatModel(chatModel)
                 .retrievalAugmentor(retrievalAugmentor)
                 .chatMemoryProvider(memberId -> MessageWindowChatMemory.withMaxMessages(10))
                 .build();
     }
 
     @Bean
-    public ChatRAGAssistant chatRagAssistant() {
+    public ChatRAGAssistant chatRagAssistant(
+            EmbeddingStore<TextSegment> embeddingStore,
+            EmbeddingModel embeddingModel,
+            ChatModel chatModel
+    ) {
 
         ContentRetriever contentRetriever
                 = EmbeddingStoreContentRetriever.builder()
-                        .embeddingModel(embeddingModel())
-                        .embeddingStore(embeddingStrore())
+                        .embeddingModel(embeddingModel)
+                        .embeddingStore(embeddingStore)
                         .build();
 
         ContentInjector contentInjector = DefaultContentInjector.builder()
                 .metadataKeysToInclude(Arrays.asList("file_name", "index"))
                 .build();
 
-        RetrievalAugmentor retrievalAugmentor= DefaultRetrievalAugmentor.builder()
+        RetrievalAugmentor retrievalAugmentor = DefaultRetrievalAugmentor.builder()
                 .contentRetriever(contentRetriever)
                 .contentInjector(contentInjector)
                 .build();
 
         return AiServices.builder(ChatRAGAssistant.class)
-                .chatModel(chatModel())
+                .chatModel(chatModel)
                 .retrievalAugmentor(retrievalAugmentor)
                 .chatMemoryProvider(conversationId -> MessageWindowChatMemory.withMaxMessages(10))
                 .build();
