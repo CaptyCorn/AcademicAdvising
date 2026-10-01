@@ -63,3 +63,15 @@ export const searchPosts = async (keyword: string, page: number = 0) => {
     const responseInfo = await res.json();
     return responseInfo.data;
 };
+
+export const loadMyPosts = async (page: number) => {
+    const token = (await cookies()).get('token')?.value;
+    const res = await fetch(`${callAPI(endpoints['myPost'])}?page=${page}`, {
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` }
+    });
+    const responseInfo = await res.json().catch(() => null);
+    if (!res.ok) {
+        throw new Error(responseInfo?.message ?? `Không thể tải bài viết của bạn (${res.status})`);
+    }
+    return responseInfo.data as IPageResponse<IPosts>;
+};
