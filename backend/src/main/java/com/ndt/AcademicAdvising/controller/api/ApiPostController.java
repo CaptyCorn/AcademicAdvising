@@ -197,25 +197,22 @@ public class ApiPostController {
     }
 
     @GetMapping("/posts/me")
-    ResponseEntity<ResponseObjectDTO> getAllPostUser() {
-
-        Page<ResponsePostDTO> data = this.postService.getListPostUser();
-        if (!data.getContent().isEmpty()) {
+    ResponseEntity<ResponseObjectDTO> getAllPostUser(@RequestParam Map<String, String> params) {
+        try {
             return ResponseEntity
                     .status(HttpStatus.OK)
                     .body(new ResponseObjectDTO(
                             Boolean.TRUE,
                             200,
                             "Lấy danh sách bài đăng của bạn thành công",
-                            data));
+                            this.postService.getListPostUser(params)));
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body(new ResponseObjectDTO(Boolean.FALSE, 401, e.getMessage(), null));
+        } catch (Exception e) {
+            System.out.println("Lỗi lấy bài đăng của người dùng: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(new ResponseObjectDTO(Boolean.FALSE, 500, "Lỗi hệ thống", null));
         }
-        return ResponseEntity
-                .status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body(new ResponseObjectDTO(
-                        Boolean.FALSE,
-                        500,
-                        "Lỗi hệ thống",
-                        null)
-                );
     }
 }

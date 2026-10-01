@@ -4,6 +4,7 @@
  */
 package com.ndt.AcademicAdvising.repositories.impl;
 
+import com.ndt.AcademicAdvising.enums.BookStatus;
 import com.ndt.AcademicAdvising.pojo.Book;
 import com.ndt.AcademicAdvising.pojo.Subject;
 import com.ndt.AcademicAdvising.repositories.custom.CustomBookRepository;
@@ -49,6 +50,7 @@ public class BookRepositoryImpl implements CustomBookRepository{
         query.orderBy(builder.desc(root.get("createdAt")), builder.desc(root.get("id")));
         
         List<Predicate> predicates = buildPredicate(builder, root, params);
+        predicates.add(builder.like(root.get("bookStatus"), String.valueOf(BookStatus.AVAILABLE)));
         
         if (!predicates.isEmpty()) {
             query.where(predicates.toArray(Predicate[]::new));
@@ -69,6 +71,7 @@ public class BookRepositoryImpl implements CustomBookRepository{
         Root countRoot = countQuery.from(Book.class);
         
         List<Predicate> countPredicates = buildPredicate(builder, countRoot, params);
+        countPredicates.add(builder.like(root.get("bookStatus"), String.valueOf(BookStatus.AVAILABLE)));
         
         countQuery.select(builder.countDistinct(countRoot));
         

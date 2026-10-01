@@ -18,7 +18,7 @@ public interface PostService {
     ResponsePostDTO addPost(String content);
     void deletePost(int postId);
     ResponsePostDTO updatePost(int postId, String content);
-    public Page<ResponsePostDTO> getListPostUser();
+    PageResponseDTO<ResponsePostDTO> getListPostUser(Map<String, String> params);
     ResponsePostDTO getPostDetail(int postId);
     
 }
